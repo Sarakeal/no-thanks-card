@@ -1,7 +1,11 @@
 import { Server } from "socket.io";
 import * as Koa from "koa";
 
-const io = new Server(3000);
+const io = new Server(3000, {
+    cors: {
+        origin: "*",
+    }
+});
 
 io.on("connection", (socket) => {
     // send a message to the client
@@ -10,7 +14,7 @@ io.on("connection", (socket) => {
     // receive a message from the client
     socket.on("hello from client", (...args) => {
         // ...
-        console.log("message from client")
+        console.log(args)
     });
 });
 
