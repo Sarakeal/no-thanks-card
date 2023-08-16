@@ -5,10 +5,15 @@
 </template>
 
 <script>
+import {setup} from "@/socket";
+
 export default {
   name: 'HomePage',
   props: {
     msg: String
+  },
+  created() {
+    setup();
   }
 }
 </script>
