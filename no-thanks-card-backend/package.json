@@ -1,0 +1,20 @@
+{
+  "name": "no-thanks-card-backend",
+  "version": "1.0.0",
+  "description": "No thanks card server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sarakeal",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.14.2",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.8",
+    "@types/node": "^20.5.0",
+    "typescript": "^5.1.6"
+  }
+}
