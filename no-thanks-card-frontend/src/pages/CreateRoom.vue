@@ -1,8 +1,6 @@
 <template>
   <div class="main-page">
-    {{ msg }}
-
-    <button @click="$router.push('create-room')">创建房间</button>
+    <button>确认</button>
   </div>
 </template>
 
@@ -10,7 +8,7 @@
 import {setup} from "@/socket";
 
 export default {
-  name: 'HomePage',
+  name: 'CreateRoom',
   props: {
     msg: String
   },
