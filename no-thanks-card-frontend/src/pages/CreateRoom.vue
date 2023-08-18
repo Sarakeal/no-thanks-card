@@ -1,5 +1,5 @@
 <template>
-  <div class="createroom">
+  <div class="create-room">
     <div class="name">
       <span class="hint">你的昵称：</span>
         <input
@@ -18,12 +18,13 @@
             v-model="password"
         />
     </div>
-    <button>确认创建</button>
+    <button @click="create()">确认创建</button>
   </div>
 </template>
 
 <script>
-import {setup} from "@/socket";
+
+import {createRoom} from "@/http/room";
 
 export default {
   name: 'CreateRoom',
@@ -33,15 +34,26 @@ export default {
       password: ''
     }
   },
-  created() {
-    setup();
+  methods: {
+    async create() {
+      const res = await createRoom({
+        name: this.nickname,
+        password: this.password
+      })
+
+      if (res && res.status === 200) {
+        const data = res.data;
+
+        console.log(data);
+      }
+    }
   }
 }
 </script>
 
 
 <style lang="scss" scoped>
-.createroom {
+.create-room {
   padding: 1rem 1rem 0;
   text-align: center;
   .title {

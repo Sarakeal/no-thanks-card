@@ -6,3 +6,18 @@ export interface TokenDef {
   datetime: number;
   roomNumber: string;
 }
+
+
+export interface RoomDef {
+  roomNumber: string; // 房间号码, 6 位数字
+  creatorID: ID; // 创建者 ID
+  players: PlayerDef[]; // 参与者
+}
+
+export interface PlayerDef {
+  ID: ID;
+
+  name: string;
+
+  index: number;
+}

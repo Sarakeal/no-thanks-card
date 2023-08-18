@@ -27,6 +27,8 @@ export function getToken(): TokenDef | null {
         console.log('Token expired')
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
   return null;
 }

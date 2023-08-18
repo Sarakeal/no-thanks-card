@@ -43,8 +43,8 @@ export default function request<T = {}>(
         }
     );
 
-    return new Promise<HttpRes<T>>(async (resolve) => {
-        const res = await instance(config);
+    return new Promise<HttpRes<T>>( (resolve) => {
+        const res = instance(config);
         resolve((res as unknown) as HttpRes<T>);
     });
 }
