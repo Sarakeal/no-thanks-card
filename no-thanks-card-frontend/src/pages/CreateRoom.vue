@@ -28,6 +28,7 @@ import {createRoom} from "@/http/room";
 import router from "@/router";
 import {players} from "@/reactivity/game";
 import {joinRoomSocket} from "@/socket";
+import {setToken} from "@/utils/token";
 
 export default {
   name: 'CreateRoom',
@@ -57,6 +58,8 @@ export default {
           }
         });
 
+        // FIXME
+        setToken("ID", data.roomNumber);
         players.value = [
           {
             index: 1,

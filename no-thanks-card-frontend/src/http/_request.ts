@@ -16,6 +16,7 @@ export default function request<T = {}>(
     instance.interceptors.request.use(
         (config) => {
             const token = getToken();
+
             config.headers[IDHeaderName] = token && token.ID;
             config.headers[RoomNumberHeaderName] =
                 token && token.roomNumber;

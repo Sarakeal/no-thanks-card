@@ -5,17 +5,18 @@
         <span class="player-name">{{ item.name }}</span>
       </div>
     </div>
-    <button>开始游戏</button>
+    <button @click="gameBegin()">开始游戏</button>
   </div>
 </template>
 
 <script>
 
 import {players} from "@/reactivity/game";
-import {initRoom} from "@/http/room";
+import {gameBegin, initRoom} from "@/http/room";
 
 export default {
   name: 'WaitRoom',
+  methods: {gameBegin},
   data() {
     return {
       playerList: players

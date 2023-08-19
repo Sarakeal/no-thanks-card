@@ -1,20 +1,14 @@
-import { Middleware } from "koa";
+import {Middleware} from "koa";
 
-import {
-  JoinRoomRequest, JoinRoomResponse
-} from "../../../../no-thanks-card-frontend/shared/httpMsg/JoinRoomMsg";
-import {
-  RoomJoinMsg
-} from "../../../../no-thanks-card-frontend/shared/wsMsg/RoomJoin";
-import {
-  Events
-} from "../../../../no-thanks-card-frontend/shared/WSEvents";
-import { Room } from "../../models/RoomModel";
+import {JoinRoomRequest, JoinRoomResponse} from "../../../../no-thanks-card-frontend/shared/httpMsg/JoinRoomMsg";
+import {RoomJoinMsg} from "../../../../no-thanks-card-frontend/shared/wsMsg/RoomJoin";
+import {Events} from "../../../../no-thanks-card-frontend/shared/WSEvents";
+import {Room} from "../../models/RoomModel";
 import io from "../../index";
 
 const roomInit: Middleware = async (ctx, next) => {
   const req = ctx.request.body as JoinRoomRequest;
-  const { name, roomNumber, password } = req;
+  const {name, roomNumber, password} = req;
 
   const room = Room.getRoom(roomNumber);
 

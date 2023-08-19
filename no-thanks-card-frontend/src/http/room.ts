@@ -38,3 +38,12 @@ export async function joinRoom(
 
     return res as JoinRoomResponse;
 }
+
+export async function gameBegin(): Promise<boolean> {
+    const res = await request({
+        url: "/game/begin",
+        method: "POST",
+    });
+
+    return res.status === 200;
+}

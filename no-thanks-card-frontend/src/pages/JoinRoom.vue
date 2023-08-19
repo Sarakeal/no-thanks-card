@@ -31,9 +31,10 @@
 import {joinRoom} from "@/http/room";
 import router from "@/router";
 import {joinRoomSocket} from "@/socket";
+import {setToken} from "@/utils/token";
 
 export default {
-  name: "JoinRoom.vue",
+  name: "JoinRoom",
   data() {
     return {
       roomNumber: '',
@@ -52,6 +53,9 @@ export default {
       if (res && res.status === 200) {
 
         joinRoomSocket(this.roomNumber);
+
+        // FIXME
+        setToken("ID", this.roomNumber);
 
         router.push({
           name: "waitRoom",
