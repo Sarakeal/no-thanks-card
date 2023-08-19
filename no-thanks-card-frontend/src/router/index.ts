@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import HomePage from '../pages/HomePage.vue'
 import CreateRoom from '../pages/CreateRoom.vue'
 import WaitRoom from '../pages/WaitRoom.vue'
+import JoinRoom from '../pages/JoinRoom.vue'
 
 
 Vue.use(VueRouter)
@@ -22,6 +23,11 @@ const routes: Array<RouteConfig> = [
     path: '/wait-room',
     name: 'waitRoom',
     component: WaitRoom
+  },
+  {
+    path: '/join-room',
+    name: 'joinRoom',
+    component: JoinRoom
   }
 ]
 

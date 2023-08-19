@@ -1,6 +1,7 @@
 import request from "./_request";
 import {CreateRoomRequest, CreateRoomResponse} from "../../shared/httpMsg/CreateRoomMsg";
 import {InitRoomRequest, InitRoomResponse} from "../../shared/httpMsg/InitRoomMsg";
+import {JoinRoomRequest, JoinRoomResponse} from "../../shared/httpMsg/JoinRoomMsg";
 
 export async function createRoom(
     data: CreateRoomRequest
@@ -24,4 +25,16 @@ export async function initRoom(
     })) as unknown;
 
     return res as InitRoomResponse;
+}
+
+export async function joinRoom(
+  data: JoinRoomRequest
+): Promise<JoinRoomResponse | null> {
+    const res = (await request({
+        url: "/room/join",
+        method: "POST",
+        data,
+    })) as unknown;
+
+    return res as JoinRoomResponse;
 }

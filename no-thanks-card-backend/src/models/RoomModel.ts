@@ -42,6 +42,20 @@ export class Room implements RoomDef {
     return this.players;
   }
 
+  joinPlayer(name: string, password: string): PlayerDef {
+    if (this.password && this.password !== password) {
+      //TODO error handler
+      console.error('password wrong');
+    }
+
+    const index = this.players.length + 1;
+
+    const player = new Player(name, index);
+
+    this.players.push(player);
+    return player;
+  }
+
 }
 
 
