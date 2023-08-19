@@ -12,6 +12,7 @@
 <script>
 
 import {players} from "@/reactivity/game";
+import {initRoom} from "@/http/room";
 
 export default {
   name: 'WaitRoom',
@@ -20,8 +21,12 @@ export default {
       playerList: players
     }
   },
-  methods: {
-
+  async mounted() {
+    let number = this.$route.query['number'];
+    const res = await initRoom({roomNumber: number})
+    if (res && res.status === 200) {
+      players.value = res.data.players;
+    }
   }
 }
 </script>

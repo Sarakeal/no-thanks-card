@@ -12,7 +12,7 @@ const roomCreate: Middleware = async (ctx, next) => {
 
   const creator = new Player(name, 1);
 
-  const room = new Room(name, password);
+  const room = new Room({creator, password});
 
   const res: CreateRoomResponse = {
     status: 200,
