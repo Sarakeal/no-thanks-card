@@ -25,6 +25,8 @@
 <script>
 
 import {createRoom} from "@/http/room";
+import router from "@/router";
+import {players} from "@/reactivity/game";
 
 export default {
   name: 'CreateRoom',
@@ -44,7 +46,20 @@ export default {
       if (res && res.status === 200) {
         const data = res.data;
 
-        console.log(data);
+        router.push({
+          name: "waitRoom",
+          query: {
+            pw: this.password,
+            number: data.roomNumber
+          }
+        });
+
+        players.value = [
+          {
+            index: 1,
+            name: this.nickname,
+          }
+        ]
       }
     }
   }

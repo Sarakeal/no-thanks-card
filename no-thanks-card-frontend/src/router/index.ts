@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import HomePage from '../pages/HomePage.vue'
 import CreateRoom from '../pages/CreateRoom.vue'
+import WaitRoom from '../pages/WaitRoom.vue'
 
 
 Vue.use(VueRouter)
@@ -14,8 +15,13 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/create-room',
-    name: 'create room',
+    name: 'createRoom',
     component: CreateRoom
+  },
+  {
+    path: '/wait-room',
+    name: 'waitRoom',
+    component: WaitRoom
   }
 ]
 
