@@ -3,6 +3,7 @@ import {
   RoomDef,
 } from "../../../no-thanks-card-frontend/shared/ModelDefs";
 import {Player} from "./PlayerModel";
+import {createError} from "../middleware/errorHandler";
 
 export class Room implements RoomDef {
   roomNumber: string;
@@ -34,7 +35,10 @@ export class Room implements RoomDef {
 
   static getRoom(number: string): Room {
     const room = Room.roomMap[number];
-    // TODO if room not exist
+
+    if (!room) {
+      return createError({ status: 400, msg: "未找到房间号" });
+    }
     return room;
   }
 
@@ -44,8 +48,7 @@ export class Room implements RoomDef {
 
   joinPlayer(name: string, password: string): PlayerDef {
     if (this.password && this.password !== password) {
-      //TODO error handler
-      console.error('password wrong');
+      return createError({ status: 401, msg: "密码错误" });
     }
 
     const index = this.players.length + 1;
