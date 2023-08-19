@@ -1,17 +1,25 @@
-import {io} from "socket.io-client";
+import io from "socket.io-client";
+import {Events} from "../../shared/WSEvents";
+import {WS_SERVER_DOMAIN} from "../../shared/constants";
+import roomJoin from "@/socket/roomJoin";
 
-let socket;
+let socket: any;
 
+function joinRoomSocket(roomNumber: string) {
+  if (socket) {
+    socket.removeAllListeners();
+    socket.disconnect();
+  }
 
-function setup() {
-    socket = io("ws://localhost:3000");
+  socket = io(WS_SERVER_DOMAIN);
+  socket.on("connection", () => {
+    console.log("#ws connected");
+  });
 
-    socket.emit("hello from client", 5, "6", { 7: Uint8Array.from([8]) });
+  socket.on(Events.ROOM_JOIN, roomJoin);
 
-    socket.on("hello from server", (...args) => {
-        // ...
-        console.log(args)
-    });
+  socket.emit(Events.ROOM_JOIN, roomNumber);
+
 }
 
-export {setup}
+export {joinRoomSocket, socket};

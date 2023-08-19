@@ -27,6 +27,7 @@
 import {createRoom} from "@/http/room";
 import router from "@/router";
 import {players} from "@/reactivity/game";
+import {joinRoomSocket} from "@/socket";
 
 export default {
   name: 'CreateRoom',
@@ -45,6 +46,8 @@ export default {
 
       if (res && res.status === 200) {
         const data = res.data;
+
+        joinRoomSocket(data.roomNumber);
 
         router.push({
           name: "waitRoom",

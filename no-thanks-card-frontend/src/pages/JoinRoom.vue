@@ -30,6 +30,7 @@
 <script>
 import {joinRoom} from "@/http/room";
 import router from "@/router";
+import {joinRoomSocket} from "@/socket";
 
 export default {
   name: "JoinRoom.vue",
@@ -49,6 +50,9 @@ export default {
       })
 
       if (res && res.status === 200) {
+
+        joinRoomSocket(this.roomNumber);
+
         router.push({
           name: "waitRoom",
           query: {

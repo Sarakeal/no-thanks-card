@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import {setup} from "@/socket";
 
 export default {
   name: 'HomePage',
@@ -15,7 +14,6 @@ export default {
     msg: String
   },
   created() {
-    setup();
   }
 }
 </script>
