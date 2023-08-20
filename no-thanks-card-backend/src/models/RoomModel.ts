@@ -60,6 +60,13 @@ export class Room implements RoomDef {
     return this.players;
   }
 
+  getPlayerById(id: string): Player {
+    const player = this.players.find((p) => p._id === id);
+    if (!player)
+      return createError({ status: 401, msg: "id 错误" });
+    return player;
+  }
+
   joinPlayer(name: string, password: string): PlayerDef {
     if (this.password && this.password !== password) {
       return createError({ status: 401, msg: "密码错误" });

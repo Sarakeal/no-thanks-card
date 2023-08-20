@@ -9,6 +9,10 @@ export const selfPlayer = ref<PlayerDef>({
     name: "",
 
     index: 0,
+
+    cards: [],
+
+    money: 0,
 });
 
 export const currentPlayer = ref<PlayerDef>({
@@ -17,4 +21,8 @@ export const currentPlayer = ref<PlayerDef>({
     name: "",
 
     index: 0,
+
+    cards: [],
+
+    money: 0,
 });

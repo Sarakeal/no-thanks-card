@@ -20,4 +20,8 @@ export interface PlayerDef {
   name: string;
 
   index: number;
+
+  cards: number[];
+
+  money: number;
 }

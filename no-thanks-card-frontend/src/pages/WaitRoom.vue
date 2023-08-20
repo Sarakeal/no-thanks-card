@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 import {players} from "@/reactivity/game";
 import {gameBegin, initRoom} from "@/http/room";
 

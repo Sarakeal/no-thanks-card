@@ -1,19 +1,59 @@
 import {Room} from "../../../models/RoomModel";
 import io from "../../../index";
 import {Events} from "../../../../../no-thanks-card-frontend/shared/WSEvents";
+import {Action} from "../../../../../no-thanks-card-frontend/shared/httpMsg/PlayerActMsg";
 import {ChangeStatusMsg} from "../../../../../no-thanks-card-frontend/shared/wsMsg/ChangeStatus";
 import {GameEndMsg} from "../../../../../no-thanks-card-frontend/shared/wsMsg/GameEnd";
+import {Player} from "../../../models/PlayerModel";
 
+export interface Response<T = {}> {
+  status: number;
+  msg: string;
+  data: T;
+}
 
 const CLEAR_ROOM_TIME = 3600 * 1000;
 
 export interface IGameHandler {
+
+  /**
+   * 处理玩家发送到 http 请求(在此状态下进行的游戏操作)
+   */
+  handleHttp: (
+    room: Room,
+    player: Player,
+    action: Action,
+  ) => Promise<Response>;
+
   start: (room: Room) => void;
 
   end: (room: Room) => void;
 }
 
 export const GameHandler: IGameHandler = {
+
+  async handleHttp(
+    room: Room,
+    player: Player,
+    action: Action,
+  ) {
+    if (action === Action.ACCEPT) {
+      player.cards.push(room.cards.currentCard);
+      player.money--;
+      room.cards.getNextCard();
+      room.currentPlayer = room.getNextPlayer();
+      this.start(room);
+    } else {
+      room.currentPlayer = room.getNextPlayer();
+      this.start(room);
+    }
+
+    return {
+      status: 200,
+      msg: "ok",
+      data: {  },
+    };
+  },
 
   start(room: Room) {
     const timeout = 5;
