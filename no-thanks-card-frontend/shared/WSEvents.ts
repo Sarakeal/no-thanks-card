@@ -4,6 +4,8 @@ export enum Events {
 
   GAME_BEGIN = "GAME_BEGIN",
 
+  GAME_END = "GAME_END",
+
   CHANGE_STATUS = "CHANGE_STATUS",
 
 }

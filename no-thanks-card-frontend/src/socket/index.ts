@@ -3,6 +3,7 @@ import {Events} from "../../shared/WSEvents";
 import {WS_SERVER_DOMAIN} from "../../shared/constants";
 import roomJoin from "@/socket/roomJoin";
 import gameBegin from "@/socket/gameBegin";
+import gameEnd from "@/socket/gameEnd";
 import changeStatus from "@/socket/changeStatus";
 
 let socket: any;
@@ -20,6 +21,7 @@ function joinRoomSocket(roomNumber: string) {
 
   socket.on(Events.ROOM_JOIN, roomJoin);
   socket.on(Events.GAME_BEGIN, gameBegin);
+  socket.on(Events.GAME_END, gameEnd);
   socket.on(Events.CHANGE_STATUS, changeStatus);
 
   socket.emit(Events.ROOM_JOIN, roomNumber);

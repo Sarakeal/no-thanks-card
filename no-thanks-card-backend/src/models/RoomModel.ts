@@ -52,6 +52,10 @@ export class Room implements RoomDef {
     return room;
   }
 
+  static clearRoom(number: string): void {
+    delete this.roomMap[number];
+  }
+
   getPlayers(): PlayerDef[] {
     return this.players;
   }
