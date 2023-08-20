@@ -1,5 +1,7 @@
 <template>
   <div>
+    <div>当前卡片：{{card}}</div>
+    <div>桌上的筹码：{{dealerMoney}}</div>
     <div class="player-list">
       <div v-for="player in playerList" :key="player.index" class="player-item">
         <div class="player-name">玩家名称：{{ player.name }}</div>
@@ -19,7 +21,7 @@
 
 <script>
 import {currentPlayer, selfPlayer} from "@/reactivity/game";
-import {players} from "@/reactivity/game";
+import {players, dealerMoney, card} from "@/reactivity/game";
 import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {act} from "@/reactivity/playAction";
 
@@ -33,7 +35,9 @@ export default {
   },
   data() {
     return {
-      playerList: players
+      playerList: players,
+      dealerMoney: dealerMoney,
+      card: card,
     }
   },
   computed: {

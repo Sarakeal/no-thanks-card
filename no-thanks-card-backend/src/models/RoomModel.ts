@@ -19,6 +19,8 @@ export class Room implements RoomDef {
 
   cards: Cards;
 
+  dealerMoney: number;
+
   private static roomMap: Record<string, Room> = {};
 
   constructor({
@@ -35,12 +37,14 @@ export class Room implements RoomDef {
     this.currentPlayer = creator;
 
     this.cards = new Cards();
+    this.dealerMoney = 0;
 
     const roomNumber = Math.random().toString().slice(2, 8);
 
     this.roomNumber = roomNumber;
 
     Room.roomMap[this.roomNumber] = this;
+
   }
 
   static getRoom(number: string): Room {

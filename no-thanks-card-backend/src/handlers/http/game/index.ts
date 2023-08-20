@@ -39,11 +39,22 @@ export const GameHandler: IGameHandler = {
   ) {
     if (action === Action.ACCEPT) {
       player.cards.push(room.cards.currentCard);
-      player.money--;
       room.cards.next();
       room.currentPlayer = room.getNextPlayer();
+      player.money += room.dealerMoney;
+      room.dealerMoney = 0;
       this.start(room);
     } else {
+      if (player.money > 0) {
+        player.money--;
+        room.dealerMoney++;
+      } else {
+        // 没钱只能接受
+        player.cards.push(room.cards.currentCard);
+        player.money += room.dealerMoney;
+        room.dealerMoney = 0;
+        room.cards.next();
+      }
       room.currentPlayer = room.getNextPlayer();
       this.start(room);
     }
@@ -74,6 +85,7 @@ export const GameHandler: IGameHandler = {
       player: room.currentPlayer,
       card: room.cards.currentCard,
       players: room.getPlayers(),
+      dealerMoney: room.dealerMoney,
     } as ChangeStatusMsg);
   },
 

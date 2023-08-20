@@ -26,3 +26,6 @@ export const currentPlayer = ref<PlayerDef>({
 
     money: 0,
 });
+
+export const dealerMoney = ref<number>();
+export const card = ref<number>();

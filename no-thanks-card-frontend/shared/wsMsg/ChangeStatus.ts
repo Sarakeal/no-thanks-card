@@ -8,4 +8,6 @@ export interface ChangeStatusMsg {
   card: number; // 当前卡牌
 
   players: PlayerDef[]; // 同步所有玩家信息
+
+  dealerMoney: number; // 庄家的钱
 }
