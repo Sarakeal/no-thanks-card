@@ -1,24 +1,40 @@
 <template>
   <div class="create-room">
-    <div class="name">
-      <span class="hint">你的昵称：</span>
+    <div class="flex flex-col h-screen justify-center items-center">
+      <div class="max-w-3xl mx-auto py-10 px-4 text-6xl">
+        创建房间
+      </div>
+      <div class="flex text-2xl py-4">
+        <div class="flex-auto">
+          你的昵称：
+        </div>
         <input
+            class="px-4 border border-gray-400 bg-gray-100 rounded text-base hover:outline-none hover:border-indigo-600"
             :maxlength="10"
             type="text"
             placeholder="请输入昵称"
             v-model="nickname"
         />
-    </div>
-    <div class="password">
-      <span class="hint">房间密码：</span>
+      </div>
+      <div class="flex text-2xl py-4 text-center">
+        <div class="flex-auto">
+          房间密码：
+        </div>
         <input
-            type="text"
+            class="px-4 border border-gray-400 bg-gray-100 rounded text-base hover:outline-none hover:border-indigo-600"
             :maxlength="10"
-            placeholder="(可选)"
+            type="text"
+            placeholder="请输入密码"
             v-model="password"
         />
+      </div>
+      <div class="max-w-3xl mx-auto py-6 px-4">
+        <button @click="create()"
+                class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
+          确认创建
+        </button>
+      </div>
     </div>
-    <button @click="create()">确认创建</button>
   </div>
 </template>
 
@@ -68,48 +84,5 @@ export default {
 
 
 <style lang="scss" scoped>
-.create-room {
-  padding: 1rem 1rem 0;
-  text-align: center;
-  .title {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  .tile-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    .room-character-tile {
-      flex: 1 1 33%;
-      padding: 1rem 0;
-    }
-  }
 
-  .name,
-  .password {
-    .hint {
-      position: relative;
-      bottom: 0.04em;
-      word-break: keep-all;
-      margin-right: 0.5rem;
-      font-weight: bold;
-    }
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 2rem 0;
-    input {
-      max-width: calc(100% - 1rem);
-      padding: 0 0.5rem;
-      line-height: 2.4rem;
-      overflow: visible;
-    }
-    .useborder {
-      max-width: 50%;
-    }
-  }
-
-  .btn {
-    margin: auto;
-  }
-}
 </style>

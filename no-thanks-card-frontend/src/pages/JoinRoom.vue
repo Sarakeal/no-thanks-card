@@ -1,29 +1,53 @@
 <template>
   <div class="join-room">
-    <div class="title">加入房间</div>
-    <div class="number">
-      <span class="hint">房号：</span>
-        <input maxlength="6" type="text" v-model="roomNumber" />
-    </div>
-    <div class="pw">
-      <span class="hint">密码：</span>
+    <div class="flex flex-col h-screen justify-center items-center">
+      <div class="max-w-3xl mx-auto py-10 px-4 text-6xl">
+        加入房间
+      </div>
+
+      <div class="flex text-2xl py-4 text-center">
+        <div class="flex-auto">
+          昵称：
+        </div>
         <input
-            maxlength="20"
+            class="px-4 border border-gray-400 bg-gray-100 rounded text-base hover:outline-none hover:border-indigo-600"
+            :maxlength="10"
             type="text"
-            v-model="password"
-        />
-    </div>
-    <div class="name">
-      <span class="hint">昵称：</span>
-        <input
-            :maxlength="8"
-            type="text"
-            placeholder=""
+            placeholder="请输入昵称"
             v-model="nickname"
         />
+      </div>
+      <div class="flex text-2xl py-4">
+        <div class="flex-auto">
+          房号：
+        </div>
+        <input
+            class="px-4 border border-gray-400 bg-gray-100 rounded text-base hover:outline-none hover:border-indigo-600"
+            :maxlength="6"
+            type="text"
+            placeholder="请输入房号"
+            v-model="roomNumber"
+        />
+      </div>
+      <div class="flex text-2xl py-4 text-center">
+        <div class="flex-auto">
+          密码：
+        </div>
+        <input
+            class="px-4 border border-gray-400 bg-gray-100 rounded text-base hover:outline-none hover:border-indigo-600"
+            :maxlength="10"
+            type="text"
+            placeholder="请输入密码"
+            v-model="password"
+        />
+      </div>
+      <div class="max-w-3xl mx-auto py-6 px-4">
+        <button @click="join"
+                class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
+          确认加入
+        </button>
+      </div>
     </div>
-    <div class="spacer"></div>
-    <button @click="join">确认加入</button>
   </div>
 </template>
 
@@ -59,7 +83,7 @@ export default {
 
         setToken(data.ID, this.roomNumber);
 
-        router.push({
+        await router.push({
           name: "waitRoom",
           query: {
             pw: this.password,
@@ -75,41 +99,5 @@ export default {
 
 
 <style lang="scss" scoped>
-.join-room {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 90vh;
-  .title {
-    font-weight: bold;
-    font-size: 2rem;
-    padding: 2rem;
-  }
 
-  .pw,
-  .name,
-  .number {
-    .hint {
-      position: relative;
-      bottom: 0.08em;
-      word-break: keep-all;
-      margin-right: 0.5rem;
-      font-weight: bold;
-    }
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem 0;
-    input {
-      max-width: calc(100% - 1rem);
-      padding: 0 0.5rem;
-      line-height: 2.4rem;
-      overflow: visible;
-    }
-  }
-
-  .spacer {
-    flex: 1;
-  }
-}
 </style>
