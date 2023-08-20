@@ -26,9 +26,9 @@
 
 import {createRoom} from "@/http/room";
 import router from "@/router";
-import {players} from "@/reactivity/game";
 import {joinRoomSocket} from "@/socket";
 import {setToken} from "@/utils/token";
+import {selfPlayer} from "@/reactivity/game";
 
 export default {
   name: 'CreateRoom',
@@ -47,6 +47,7 @@ export default {
 
       if (res && res.status === 200) {
         const data = res.data;
+        selfPlayer.value = res.data.player;
 
         joinRoomSocket(data.roomNumber);
 
@@ -59,12 +60,6 @@ export default {
         });
 
         setToken(data.ID, data.roomNumber);
-        players.value = [
-          {
-            index: 1,
-            name: this.nickname,
-          }
-        ]
       }
     }
   }

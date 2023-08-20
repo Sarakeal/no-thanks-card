@@ -20,6 +20,7 @@ const roomCreate: Middleware = async (ctx, next) => {
     data: {
       roomNumber: room.roomNumber,
       ID: creator._id,
+      player: creator,
     },
   };
 
