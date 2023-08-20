@@ -10,6 +10,8 @@ export class Room implements RoomDef {
   creatorID: ID;
   players: Player[];
 
+  currentPlayer: Player;
+
   password: string;
 
   timer: NodeJS.Timeout;
@@ -26,7 +28,8 @@ export class Room implements RoomDef {
     this.creatorID = creator.ID;
     this.password = password;
 
-    this.players = [creator]
+    this.players = [creator];
+    this.currentPlayer = creator;
 
     const roomNumber = Math.random().toString().slice(2, 8);
 
@@ -53,7 +56,7 @@ export class Room implements RoomDef {
       return createError({ status: 401, msg: "密码错误" });
     }
 
-    const index = this.players.length + 1;
+    const index = this.players.length;
 
     const player = new Player(name, index);
 
@@ -61,6 +64,10 @@ export class Room implements RoomDef {
     return player;
   }
 
+  getNextPlayer(): PlayerDef {
+    const totalPlayerCount = this.players.length;
+    return this.players[(this.currentPlayer.index + 1) % totalPlayerCount];
+  }
 }
 
 

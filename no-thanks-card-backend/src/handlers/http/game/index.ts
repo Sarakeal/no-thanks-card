@@ -13,11 +13,13 @@ export const GameHandler: IGameHandler = {
     const timeout = 5;
     clearTimeout(room.timer);
     room.timer = setTimeout(() => {
+      room.currentPlayer = room.getNextPlayer();
       this.start(room);
     }, timeout * 1000);
 
     io.to(room.roomNumber).emit(Events.CHANGE_STATUS, {
-      timeout
+      timeout,
+      player: room.currentPlayer,
     } as ChangeStatusMsg);
   }
 }

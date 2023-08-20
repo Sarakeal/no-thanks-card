@@ -10,7 +10,7 @@ const roomCreate: Middleware = async (ctx, next) => {
   const req = ctx.request.body as CreateRoomRequest;
   const { name, password } = req;
 
-  const creator = new Player(name, 1);
+  const creator = new Player(name, 0);
 
   const room = new Room({creator, password});
 
