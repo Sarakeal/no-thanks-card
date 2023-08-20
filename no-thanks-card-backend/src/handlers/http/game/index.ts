@@ -40,7 +40,7 @@ export const GameHandler: IGameHandler = {
     if (action === Action.ACCEPT) {
       player.cards.push(room.cards.currentCard);
       player.money--;
-      room.cards.getNextCard();
+      room.cards.next();
       room.currentPlayer = room.getNextPlayer();
       this.start(room);
     } else {
@@ -64,7 +64,7 @@ export const GameHandler: IGameHandler = {
       if (room.cards.isFinished()) {
         this.end(room);
       } else {
-        room.cards.getNextCard();
+        room.cards.next();
         this.start(room);
       }
     }, timeout * 1000);
@@ -117,9 +117,9 @@ export class Cards {
     this.currentCard = this.cards[this.index];
   }
 
-  getNextCard() {
-    const card = this.cards[this.index];
+  next() {
     this.index++;
+    const card = this.cards[this.index];
 
     this.currentCard = card;
     return card;
