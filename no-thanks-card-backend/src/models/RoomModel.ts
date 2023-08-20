@@ -4,6 +4,7 @@ import {
 } from "../../../no-thanks-card-frontend/shared/ModelDefs";
 import {Player} from "./PlayerModel";
 import {createError} from "../middleware/errorHandler";
+import {Cards} from "../handlers/http/game";
 
 export class Room implements RoomDef {
   roomNumber: string;
@@ -15,6 +16,8 @@ export class Room implements RoomDef {
   password: string;
 
   timer: NodeJS.Timeout;
+
+  cards: Cards;
 
   private static roomMap: Record<string, Room> = {};
 
@@ -30,6 +33,8 @@ export class Room implements RoomDef {
 
     this.players = [creator];
     this.currentPlayer = creator;
+
+    this.cards = new Cards();
 
     const roomNumber = Math.random().toString().slice(2, 8);
 
