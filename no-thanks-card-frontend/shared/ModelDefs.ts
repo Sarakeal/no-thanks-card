@@ -15,7 +15,7 @@ export interface RoomDef {
 }
 
 export interface PlayerDef {
-  ID: ID;
+  _id: ID;
 
   name: string;
 

@@ -3,10 +3,10 @@ import {PlayerDef} from "../../shared/ModelDefs";
 
 export const players: Ref<PlayerDef[]> = ref([]);
 
-export const self = ref<PlayerDef>({
-    ID: "",
-
-    name: "",
-
-    index: 0,
-});
+// export const self = ref<PlayerDef>({
+//     _id: "",
+//
+//     name: "",
+//
+//     index: 0,
+// });

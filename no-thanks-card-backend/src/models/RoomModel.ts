@@ -28,7 +28,7 @@ export class Room implements RoomDef {
     creator: Player;
     password?: string;
   }) {
-    this.creatorID = creator.ID;
+    this.creatorID = creator._id;
     this.password = password;
 
     this.players = [creator];

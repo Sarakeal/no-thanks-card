@@ -58,8 +58,7 @@ export default {
           }
         });
 
-        // FIXME
-        setToken("ID", data.roomNumber);
+        setToken(data.ID, data.roomNumber);
         players.value = [
           {
             index: 1,

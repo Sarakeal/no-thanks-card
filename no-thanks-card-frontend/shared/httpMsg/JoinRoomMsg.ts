@@ -1,5 +1,6 @@
 import { PlayerDef } from "../ModelDefs";
 import { HttpRes } from "./_httpResTemplate";
+import { ID, index } from "../ModelDefs";
 
 export interface JoinRoomRequest {
   roomNumber: string,
@@ -8,6 +9,7 @@ export interface JoinRoomRequest {
 }
 
 export type JoinRoomResponse = HttpRes<{
-  index: number;
+  index: index;
   name: string;
+  ID: ID;
 }>;

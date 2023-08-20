@@ -51,11 +51,11 @@ export default {
       })
 
       if (res && res.status === 200) {
+        const data = res.data;
 
         joinRoomSocket(this.roomNumber);
 
-        // FIXME
-        setToken("ID", this.roomNumber);
+        setToken(data.ID, this.roomNumber);
 
         router.push({
           name: "waitRoom",

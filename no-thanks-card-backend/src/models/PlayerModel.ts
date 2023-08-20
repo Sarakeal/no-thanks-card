@@ -3,7 +3,7 @@ import {
 } from "../../../no-thanks-card-frontend/shared/ModelDefs";
 
 export class Player implements PlayerDef {
-  ID: ID;
+  _id: ID;
 
   name: string;
 
@@ -12,5 +12,7 @@ export class Player implements PlayerDef {
   constructor(name, index) {
     this.name = name;
     this.index = index;
+
+    this._id = Math.random().toString(36).substring(2) + this.index;
   }
 }

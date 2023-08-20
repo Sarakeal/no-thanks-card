@@ -20,6 +20,7 @@ const roomInit: Middleware = async (ctx, next) => {
     data: {
       index: player.index,
       name: player.name,
+      ID: player._id,
     },
   };
 
