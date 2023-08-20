@@ -12,6 +12,8 @@ export class Room implements RoomDef {
 
   password: string;
 
+  timer: NodeJS.Timeout;
+
   private static roomMap: Record<string, Room> = {};
 
   constructor({
