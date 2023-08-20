@@ -21,6 +21,8 @@ export class Room implements RoomDef {
 
   dealerMoney: number;
 
+  createdAt = new Date();
+
   private static roomMap: Record<string, Room> = {};
 
   constructor({
@@ -39,11 +41,25 @@ export class Room implements RoomDef {
     this.cards = new Cards();
     this.dealerMoney = 0;
 
-    const roomNumber = Math.random().toString().slice(2, 8);
-
-    this.roomNumber = roomNumber;
-
-    Room.roomMap[this.roomNumber] = this;
+    let tryTime = 20;
+    while (tryTime--) {
+      const roomNumber = Math.random().toString().slice(2, 8);
+      const prevRoom = Room.roomMap[roomNumber];
+      if (
+        prevRoom &&
+        Date.now() - prevRoom.createdAt.getTime() <
+        1000 * 3600 * 24
+      ) {
+        continue;
+      } else {
+        this.roomNumber = roomNumber;
+        Room.roomMap[this.roomNumber] = this;
+        break;
+      }
+    }
+    if (tryTime <= 0) {
+      createError({ msg: "创建错误, 请重试!", status: 500 });
+    }
 
   }
 
