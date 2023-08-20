@@ -1,7 +1,9 @@
 
 export interface PlayerActRequest {
 
-  action: Action
+  action: Action;
+
+  playerId: string;
 }
 
 

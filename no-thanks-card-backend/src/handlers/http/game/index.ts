@@ -73,6 +73,7 @@ export const GameHandler: IGameHandler = {
       timeout,
       player: room.currentPlayer,
       card: room.cards.currentCard,
+      players: room.getPlayers(),
     } as ChangeStatusMsg);
   },
 

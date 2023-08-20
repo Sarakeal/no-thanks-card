@@ -13,10 +13,9 @@ const gameAct: Middleware = async (ctx) => {
   const req = ctx.request.body as PlayerActRequest;
 
   const roomNumber = ctx.get(RoomNumberHeaderName);
-  const playerID = ctx.get(IDHeaderName);
 
   const room = Room.getRoom(roomNumber);
-  const player = room.getPlayerById(playerID);
+  const player = room.getPlayerById(req.playerId);
 
   ctx.body = await GameHandler.handleHttp(room, player, req.action);
 };
