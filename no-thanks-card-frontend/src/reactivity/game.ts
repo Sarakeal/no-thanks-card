@@ -10,3 +10,11 @@ export const selfPlayer = ref<PlayerDef>({
 
     index: 0,
 });
+
+export const currentPlayer = ref<PlayerDef>({
+    _id: "",
+
+    name: "",
+
+    index: 0,
+});
