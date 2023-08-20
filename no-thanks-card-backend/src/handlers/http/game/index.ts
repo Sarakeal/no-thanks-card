@@ -40,14 +40,13 @@ export const GameHandler: IGameHandler = {
     if (action === Action.ACCEPT) {
       player.cards.push(room.cards.currentCard);
       room.cards.next();
-      room.currentPlayer = room.getNextPlayer();
       player.money += room.dealerMoney;
       room.dealerMoney = 0;
-      this.start(room);
     } else {
       if (player.money > 0) {
         player.money--;
         room.dealerMoney++;
+        room.currentPlayer = room.getNextPlayer();
       } else {
         // 没钱只能接受
         player.cards.push(room.cards.currentCard);
@@ -55,9 +54,8 @@ export const GameHandler: IGameHandler = {
         room.dealerMoney = 0;
         room.cards.next();
       }
-      room.currentPlayer = room.getNextPlayer();
-      this.start(room);
     }
+    this.start(room);
 
     return {
       status: 200,
@@ -67,17 +65,27 @@ export const GameHandler: IGameHandler = {
   },
 
   start(room: Room) {
+    if (room.cards.isFinished()) {
+      this.end(room);
+    }
+
     const timeout = 5;
     clearTimeout(room.timer);
     room.timer = setTimeout(() => {
-      room.currentPlayer = room.getNextPlayer();
-
-      if (room.cards.isFinished()) {
-        this.end(room);
+      // 此时是超时未操作的，默认不拿
+      if (room.currentPlayer.money > 0) {
+        room.currentPlayer.money--;
+        room.dealerMoney++;
+        room.currentPlayer = room.getNextPlayer();
       } else {
+        // 没钱只能拿牌
+        room.currentPlayer.money += room.dealerMoney;
+        room.dealerMoney = 0;
+        room.currentPlayer.cards.push(room.cards.currentCard);
         room.cards.next();
-        this.start(room);
       }
+
+      this.start(room);
     }, timeout * 1000);
 
     io.to(room.roomNumber).emit(Events.CHANGE_STATUS, {
