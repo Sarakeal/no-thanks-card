@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div v-if="canPlay" class="absolute time-countdown text-2xl rounded-full border-2 border-blue-700 bg-white p-2">
-      <span>{{ timeout < 0 ? "-" : timeout }}</span> <span class="text-red-500">S</span>
+      <span>{{ gameInfo.timeout < 0 ? "-" : gameInfo.timeout }}</span> <span class="text-red-500">S</span>
     </div>
     <div class="mx-4 shadow-lg rounded-lg overflow-hidden border-2 relative">
       <div class="flex">
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import {currentPlayer, timeout} from "@/reactivity/game";
+import {currentPlayer, gameInfo} from "@/reactivity/game";
 
 export default {
   name: "PlayerInfo",
@@ -46,14 +46,14 @@ export default {
   created() {
     if (this.canPlay) {
       setInterval(
-          () => (timeout.value -= 1),
+          () => (this.gameInfo.timeout -= 1),
           1000
       );
     }
   },
   computed: {
-    timeout: function () {
-      return timeout.value;
+    gameInfo: function() {
+      return gameInfo.value;
     },
     canPlay: function () {
       return this.player._id === currentPlayer.value._id;

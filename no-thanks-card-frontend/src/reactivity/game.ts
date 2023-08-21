@@ -1,5 +1,5 @@
 import {ref, Ref} from "vue";
-import {PlayerDef} from "../../shared/ModelDefs";
+import {GameInfo, PlayerDef} from "../../shared/ModelDefs";
 
 export const players: Ref<PlayerDef[]> = ref([]);
 
@@ -27,7 +27,8 @@ export const currentPlayer = ref<PlayerDef>({
     money: 0,
 });
 
-export const dealerMoney = ref<number>();
-export const card = ref<number>();
-
-export const timeout = ref<number>();
+export const gameInfo = ref<GameInfo>({
+    dealerMoney: 0,
+    timeout: 0,
+    card: 0,
+})

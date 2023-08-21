@@ -89,11 +89,13 @@ export const GameHandler: IGameHandler = {
     }, timeout * 1000);
 
     io.to(room.roomNumber).emit(Events.CHANGE_STATUS, {
-      timeout,
       player: room.currentPlayer,
-      card: room.cards.currentCard,
       players: room.getPlayers(),
-      dealerMoney: room.dealerMoney,
+      gameInfo: {
+        dealerMoney: room.dealerMoney,
+        timeout,
+        card: room.cards.currentCard,
+      }
     } as ChangeStatusMsg);
   },
 

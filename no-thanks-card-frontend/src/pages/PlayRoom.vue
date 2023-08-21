@@ -11,16 +11,16 @@
         <div class="flex h-full justify-center mx-4">
           <div
               class="border-4 w-80 h-full font-bold py-10 flex justify-center items-center border-gray-900 rounded-3xl">
-            <div class="main-card-number">{{ card }}</div>
+            <div class="main-card-number">{{ gameInfo.card }}</div>
           </div>
           <div class="w-96 mx-4 flex items-center">
             <div>
               <div class="flex flex-wrap">
-                <div v-for="index in [...Array(dealerMoney || 0).keys()]" :key="'dm' + index" class="mx-4 my-4">
+                <div v-for="index in [...Array(gameInfo.dealerMoney || 0).keys()]" :key="'dm' + index" class="mx-4 my-4">
                   <div class="w-16 h-16 bg-blue-600 rounded-full border-gray-900 border-2"></div>
                 </div>
               </div>
-              <div class="text-4xl">桌上筹码总数：{{ dealerMoney || 0 }}</div>
+              <div class="text-4xl">桌上筹码总数：{{ gameInfo.dealerMoney || 0 }}</div>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
 
 <script>
 import {currentPlayer, selfPlayer} from "@/reactivity/game";
-import {players, dealerMoney, card} from "@/reactivity/game";
+import {players, gameInfo} from "@/reactivity/game";
 import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {act} from "@/reactivity/playAction";
 import PlayerInfo from "@/components/PlayerInfo.vue";
@@ -74,11 +74,8 @@ export default {
     }
   },
   computed: {
-    dealerMoney: function() {
-      return dealerMoney.value;
-    },
-    card: function() {
-      return card.value;
+    gameInfo: function() {
+      return gameInfo.value;
     },
     canPlay: function () {
       return selfPlayer.value._id === currentPlayer.value._id;

@@ -25,3 +25,11 @@ export interface PlayerDef {
 
   money: number;
 }
+
+export interface GameInfo {
+  dealerMoney: number; // 庄家的钱
+
+  timeout: number; // 有多少秒可以确认
+
+  card: number; // 当前卡牌
+}
