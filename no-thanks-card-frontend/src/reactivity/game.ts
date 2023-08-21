@@ -29,3 +29,5 @@ export const currentPlayer = ref<PlayerDef>({
 
 export const dealerMoney = ref<number>();
 export const card = ref<number>();
+
+export const timeout = ref<number>();

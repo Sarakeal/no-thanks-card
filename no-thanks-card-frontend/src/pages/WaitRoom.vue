@@ -5,13 +5,13 @@
         不谢牌
       </div>
       <div class="player-list flex">
-        <div v-for="item in playerList" :key="item.index">
+        <div v-for="(player, index) in playerList" :key="index">
           <div class="mx-4 mx-auto max-w-sm shadow-lg rounded-lg overflow-hidden">
             <div class="px-6 py-4 sm:items-center">
               <img src="http://source.unsplash.com/100x100" class="block mx-auto mb-4 rounded border-gray-400 sm:mb-0 sm-ml-0"/>
               <div class="text-center ">
                 <div class="mt-4">
-                  <p class="text-xl leading-tight">{{ item.name }}</p>
+                  <p class="text-xl leading-tight">{{ player.name }}</p>
                 </div>
               </div>
             </div>
