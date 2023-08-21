@@ -69,7 +69,7 @@ export const GameHandler: IGameHandler = {
       this.end(room);
     }
 
-    const timeout = 5;
+    const timeout = 10;
     clearTimeout(room.timer);
     room.timer = setTimeout(() => {
       // 此时是超时未操作的，默认不拿
@@ -86,7 +86,7 @@ export const GameHandler: IGameHandler = {
       }
 
       this.start(room);
-    }, timeout * 1000);
+    }, (timeout + 1) * 1000);
 
     io.to(room.roomNumber).emit(Events.CHANGE_STATUS, {
       player: room.currentPlayer,
