@@ -41,22 +41,26 @@ export default {
   methods: {},
   data() {
     return {
-      timeout: timeout.value,
-      cards: [...this.player.cards].sort((a, b) => a - b),
     }
   },
   created() {
     if (this.canPlay) {
       setInterval(
-          () => (this.timeout -= 1),
+          () => (timeout.value -= 1),
           1000
       );
     }
   },
   computed: {
+    timeout: function () {
+      return timeout.value;
+    },
     canPlay: function () {
       return this.player._id === currentPlayer.value._id;
     },
+    cards: function() {
+      return [...this.player.cards].sort((a, b) => a - b);
+    }
   }
 }
 </script>

@@ -4,7 +4,7 @@
       不谢牌
     </div>
     <div class="grid grid-rows-4 grid-cols-3 gap-4">
-      <div v-for="(player, index) in firstRowPlayers" :key="index" class="col-span-1 m-4">
+      <div v-for="(player) in firstRowPlayers" :key="player._id" class="col-span-1 m-4">
         <PlayerInfo :player="player"></PlayerInfo>
       </div>
       <div class="row-span-2 col-span-3">
@@ -16,23 +16,33 @@
           <div class="w-96 mx-4 flex items-center">
             <div>
               <div class="flex flex-wrap">
-                <div v-for="index in [...Array(dealerMoney).keys()]" :key="index" class="mx-4 my-4">
+                <div v-for="index in [...Array(dealerMoney || 0).keys()]" :key="'dm' + index" class="mx-4 my-4">
                   <div class="w-16 h-16 bg-blue-600 rounded-full border-gray-900 border-2"></div>
                 </div>
               </div>
-              <div class="text-4xl">桌上筹码总数：{{ dealerMoney }}</div>
+              <div class="text-4xl">桌上筹码总数：{{ dealerMoney || 0 }}</div>
             </div>
           </div>
         </div>
       </div>
-      <div v-for="(player, index) in secondRowPlayers" :key="index" class="col-span-1 m-4">
+      <div v-for="(player) in secondRowPlayers" :key="player._id" class="col-span-1 m-4">
         <PlayerInfo :player="player"></PlayerInfo>
       </div>
-      <div v-for="index in [...Array(2 - secondRowPlayers.length).keys()]" :key="index" class="col-span-1 m-4"></div>
+      <div v-for="index in [...Array(2 - secondRowPlayers.length).keys()]" :key="'space' + index" class="col-span-1 m-4"></div>
       <div class="col-span-1 my-4 relative">
         <div class="absolute action-btn" v-show="canPlay">
-          <Btn class="float-left" content="Take it!" :click="act(Action.REJECT)"></Btn>
-          <Btn class="float-left" content="No thanks!" :click="act(Action.REJECT)"></Btn>
+          <div class="float-left max-w-3xl mx-auto py-6 px-4">
+            <button @click="accept" class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
+              Take it!
+            </button>
+          </div>
+          <div  class="float-left max-w-3xl mx-auto py-6 px-4">
+            <button @click="reject" class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
+              No thanks!
+            </button>
+          </div>
+<!--          <Btn class="float-left" content="Take it!" @click="accept"></Btn>-->
+<!--          <Btn class="float-left" content="No thanks!" @click="reject"></Btn>-->
         </div>
         <PlayerInfo :player="selfPlayer"></PlayerInfo>
       </div>
@@ -46,23 +56,29 @@ import {players, dealerMoney, card} from "@/reactivity/game";
 import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {act} from "@/reactivity/playAction";
 import PlayerInfo from "@/components/PlayerInfo.vue";
-import Btn from "@/components/Btn.vue";
+// import Btn from "@/components/Btn.vue";
 
 export default {
   name: "PlayRoom",
-  components: {Btn, PlayerInfo},
+  components: {PlayerInfo},
   methods: {
-    act,
+    async accept() {
+      await act(Action.ACCEPT);
+    },
+    async reject() {
+      await act(Action.REJECT);
+    }
   },
   data() {
     return {
-      dealerMoney: dealerMoney.value,
-      card: card.value,
     }
   },
   computed: {
-    Action() {
-      return Action
+    dealerMoney: function() {
+      return dealerMoney.value;
+    },
+    card: function() {
+      return card.value;
     },
     canPlay: function () {
       return selfPlayer.value._id === currentPlayer.value._id;
