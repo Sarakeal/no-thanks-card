@@ -57,6 +57,9 @@ export class Room implements RoomDef {
     creator: Player;
     password?: string;
   }) {
+    this.roomNumber = this.generateRoomNumber();
+    Room.roomMap[this.roomNumber] = this;
+
     shuffle(this.avatarList);
 
     this.creatorID = creator._id;
@@ -71,7 +74,9 @@ export class Room implements RoomDef {
     this.dealerMoney = 0;
 
     this.status = RoomStatus.Waiting;
+  }
 
+  private generateRoomNumber() {
     let tryTime = 20;
     while (tryTime--) {
       const roomNumber = Math.random().toString().slice(2, 8);
@@ -83,13 +88,12 @@ export class Room implements RoomDef {
       ) {
         continue;
       } else {
-        this.roomNumber = roomNumber;
-        Room.roomMap[this.roomNumber] = this;
-        break;
+        return roomNumber;
       }
     }
+
     if (tryTime <= 0) {
-      createError({msg: "创建错误, 请重试!", status: 500});
+      createError({ msg: "创建错误, 请重试!", status: 500 });
     }
   }
 
