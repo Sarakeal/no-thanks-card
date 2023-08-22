@@ -3,14 +3,14 @@
     <div class="max-w-3xl mx-auto py-10 px-4 text-6xl">
       不谢牌
     </div>
-    <div class="grid grid-rows-4 grid-cols-3 gap-4">
+    <div class="grid grid-rows-1 grid-cols-3 gap-4">
       <div v-for="(player) in firstRowPlayers" :key="player._id" class="col-span-1 m-4">
         <PlayerInfo :player="player"></PlayerInfo>
       </div>
-      <div class="row-span-2 col-span-3">
+      <div class="row-span-1 col-span-3">
         <div class="flex h-full justify-center mx-4">
           <div
-              class="border-4 w-80 h-full font-bold py-10 flex justify-center items-center border-gray-900 rounded-3xl">
+              class="border-4 w-64 h-full font-bold py-10 flex justify-center items-center border-gray-900 rounded-3xl">
             <div class="main-card-number">{{ gameInfo.card !== 0 ? gameInfo.card : '#' }}</div>
           </div>
           <div class="w-96 mx-4 flex items-center">
