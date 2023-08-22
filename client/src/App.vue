@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <router-view/>
+    <Dialog></Dialog>
   </div>
 </template>
 
@@ -13,3 +14,6 @@
   color: #2c3e50;
 }
 </style>
+<script setup lang="ts">
+import Dialog from "@/components/Dialog.vue";
+</script>
