@@ -45,5 +45,5 @@ export async function gameBegin(): Promise<boolean> {
         method: "POST",
     });
 
-    return res.status === 200;
+    return res?.status === 200;
 }

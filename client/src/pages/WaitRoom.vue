@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="max-w-3xl mx-auto py-6 px-4">
-        <button @click="gameBegin()"
+        <button @click="gameBegin"
                 class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
           开始游戏
         </button>

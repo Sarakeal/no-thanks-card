@@ -29,7 +29,7 @@
         />
       </div>
       <div class="max-w-3xl mx-auto py-6 px-4">
-        <button @click="create()"
+        <button @click="create"
                 class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
           确认创建
         </button>
@@ -45,6 +45,7 @@ import router from "@/router";
 import {joinRoomSocket} from "@/socket";
 import {setToken} from "@/utils/token";
 import {selfPlayer} from "@/reactivity/game";
+import {showDialog} from "@/reactivity/dialog";
 
 export default {
   name: 'CreateRoom',
@@ -56,6 +57,9 @@ export default {
   },
   methods: {
     async create() {
+      if (!this.nickname) return showDialog("请填写昵称!");
+      if (!this.password) return showDialog("请填写密码!");
+
       const res = await createRoom({
         name: this.nickname,
         password: this.password
@@ -67,7 +71,7 @@ export default {
 
         joinRoomSocket(data.roomNumber);
 
-        router.push({
+        await router.push({
           name: "waitRoom",
           query: {
             pw: this.password,
