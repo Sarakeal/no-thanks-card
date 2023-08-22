@@ -1,3 +1,4 @@
+import {AvatarType} from "./constants";
 
 export type ID = string; // 玩家 id
 
@@ -24,6 +25,8 @@ export interface PlayerDef {
   cards: number[];
 
   money: number;
+
+  avatar: AvatarType;
 }
 
 export interface GameInfo {

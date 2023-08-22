@@ -5,6 +5,7 @@ import {Action} from "../../../../../client/shared/httpMsg/PlayerActMsg";
 import {ChangeStatusMsg} from "../../../../../client/shared/wsMsg/ChangeStatus";
 import {GameEndMsg} from "../../../../../client/shared/wsMsg/GameEnd";
 import {Player} from "../../../models/PlayerModel";
+import {shuffle} from "../../../util";
 
 export interface Response<T = {}> {
   status: number;
@@ -188,18 +189,3 @@ export class Cards {
 
 }
 
-function shuffle(cards: number[]) {
-  const n = cards.length;
-  for (let i = 0; i < n; i++) {
-    const rand = getRand(i, n - 1);
-    // swap
-    const temp = cards[i];
-    cards[i] = cards[rand];
-    cards[rand] = temp;
-  }
-}
-
-// 从min到min中随机一个数字
-function getRand(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}

@@ -1,6 +1,7 @@
 import {
     ID, PlayerDef
 } from "../../../client/shared/ModelDefs";
+import {AvatarType} from "../../../client/shared/constants";
 
 export class Player implements PlayerDef {
   _id: ID;
@@ -12,6 +13,8 @@ export class Player implements PlayerDef {
   cards: number[];
 
   money: number;
+
+  avatar: AvatarType;
 
   constructor(name, index) {
     this.name = name;

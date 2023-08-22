@@ -6,7 +6,7 @@
     <div class="mx-4 shadow-lg rounded-lg overflow-hidden border-2 relative">
       <div class="flex">
         <div class="w-1/3 px-6 py-4 sm:items-center">
-          <img src="http://source.unsplash.com/100x100"
+          <img :src="require(`../assets/avatar/${player.avatar}.png`)"
                class="block mx-auto mb-4 rounded border-gray-400 sm:mb-0 sm-ml-0"/>
           <div class="text-center ">
             <div class="mt-4">
