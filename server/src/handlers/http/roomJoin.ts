@@ -1,8 +1,8 @@
 import {Middleware} from "koa";
 
-import {JoinRoomRequest, JoinRoomResponse} from "../../../../no-thanks-card-frontend/shared/httpMsg/JoinRoomMsg";
-import {RoomJoinMsg} from "../../../../no-thanks-card-frontend/shared/wsMsg/RoomJoin";
-import {Events} from "../../../../no-thanks-card-frontend/shared/WSEvents";
+import {JoinRoomRequest, JoinRoomResponse} from "../../../../client/shared/httpMsg/JoinRoomMsg";
+import {RoomJoinMsg} from "../../../../client/shared/wsMsg/RoomJoin";
+import {Events} from "../../../../client/shared/WSEvents";
 import {Room} from "../../models/RoomModel";
 import io from "../../index";
 

@@ -1,9 +1,9 @@
 import {Room} from "../../../models/RoomModel";
 import io from "../../../index";
-import {Events} from "../../../../../no-thanks-card-frontend/shared/WSEvents";
-import {Action} from "../../../../../no-thanks-card-frontend/shared/httpMsg/PlayerActMsg";
-import {ChangeStatusMsg} from "../../../../../no-thanks-card-frontend/shared/wsMsg/ChangeStatus";
-import {GameEndMsg} from "../../../../../no-thanks-card-frontend/shared/wsMsg/GameEnd";
+import {Events} from "../../../../../client/shared/WSEvents";
+import {Action} from "../../../../../client/shared/httpMsg/PlayerActMsg";
+import {ChangeStatusMsg} from "../../../../../client/shared/wsMsg/ChangeStatus";
+import {GameEndMsg} from "../../../../../client/shared/wsMsg/GameEnd";
 import {Player} from "../../../models/PlayerModel";
 
 export interface Response<T = {}> {

@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 
-import { Events } from "../../../no-thanks-card-frontend/shared/WSEvents";
+import { Events } from "../../../client/shared/WSEvents";
 
 export function setup(io: Server) {
   io.sockets.on("connection", (socket) => {

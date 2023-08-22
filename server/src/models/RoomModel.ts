@@ -1,7 +1,7 @@
 import {
   ID, PlayerDef,
   RoomDef,
-} from "../../../no-thanks-card-frontend/shared/ModelDefs";
+} from "../../../client/shared/ModelDefs";
 import {Player} from "./PlayerModel";
 import {createError} from "../middleware/errorHandler";
 import {Cards} from "../handlers/http/game";

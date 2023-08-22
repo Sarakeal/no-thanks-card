@@ -1,8 +1,8 @@
 import { Middleware } from "koa";
 import io from "../../../index";
-import {Events} from "../../../../../no-thanks-card-frontend/shared/WSEvents";
-import {RoomNumberHeaderName} from "../../../../../no-thanks-card-frontend/shared/constants";
-import {HttpRes} from "../../../../../no-thanks-card-frontend/shared/httpMsg/_httpResTemplate";
+import {Events} from "../../../../../client/shared/WSEvents";
+import {RoomNumberHeaderName} from "../../../../../client/shared/constants";
+import {HttpRes} from "../../../../../client/shared/httpMsg/_httpResTemplate";
 import {GameHandler} from "./index"
 import {Room} from "../../../models/RoomModel";
 

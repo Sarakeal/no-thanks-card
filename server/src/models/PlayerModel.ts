@@ -1,6 +1,6 @@
 import {
     ID, PlayerDef
-} from "../../../no-thanks-card-frontend/shared/ModelDefs";
+} from "../../../client/shared/ModelDefs";
 
 export class Player implements PlayerDef {
   _id: ID;

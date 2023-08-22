@@ -2,7 +2,7 @@ import { Middleware } from "koa";
 
 import {
     InitRoomRequest, InitRoomResponse
-} from "../../../../no-thanks-card-frontend/shared/httpMsg/InitRoomMsg";
+} from "../../../../client/shared/httpMsg/InitRoomMsg";
 import { Room } from "../../models/RoomModel";
 
 const roomInit: Middleware = async (ctx, next) => {
