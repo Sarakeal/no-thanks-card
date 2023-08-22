@@ -1,8 +1,5 @@
-import {
-  ID, PlayerDef,
-  RoomDef,
-} from "../../../client/shared/ModelDefs";
-import {AvatarType} from "../../../client/shared/constants";
+import {ID, PlayerDef, RoomDef,} from "../../../client/shared/ModelDefs";
+import {AvatarType, RoomStatus} from "../../../client/shared/constants";
 import {Player} from "./PlayerModel";
 import {createError} from "../middleware/errorHandler";
 import {Cards} from "../handlers/http/game";
@@ -49,6 +46,8 @@ export class Room implements RoomDef {
 
   avatarList = AVATAR_LIST;
 
+  status: RoomStatus;
+
   private static roomMap: Record<string, Room> = {};
 
   constructor({
@@ -70,6 +69,8 @@ export class Room implements RoomDef {
 
     this.cards = new Cards();
     this.dealerMoney = 0;
+
+    this.status = RoomStatus.Waiting;
 
     let tryTime = 20;
     while (tryTime--) {

@@ -23,7 +23,6 @@ export async function initRoom(
         method: "POST",
         data,
     })) as unknown;
-
     return res as InitRoomResponse;
 }
 

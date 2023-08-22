@@ -15,6 +15,7 @@ const roomInit: Middleware = async (ctx, next) => {
     status: 200,
     msg: "ok",
     data: {
+      status: room.status,
       players: room.getPlayers(),
     },
   };

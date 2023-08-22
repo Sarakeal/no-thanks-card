@@ -1,7 +1,7 @@
-import { Middleware } from "koa";
+import {Middleware} from "koa";
 import io from "../../../index";
 import {Events} from "../../../../../client/shared/WSEvents";
-import {RoomNumberHeaderName} from "../../../../../client/shared/constants";
+import {RoomNumberHeaderName, RoomStatus} from "../../../../../client/shared/constants";
 import {HttpRes} from "../../../../../client/shared/httpMsg/_httpResTemplate";
 import {GameHandler} from "./index"
 import {Room} from "../../../models/RoomModel";
@@ -24,6 +24,7 @@ const gameBegin: Middleware = async (ctx) => {
 
   io.to(roomNumber).emit(Events.GAME_BEGIN);
 
+  room.status = RoomStatus.Running;
   GameHandler.start(room);
 
   ctx.body = {

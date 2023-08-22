@@ -1,6 +1,7 @@
 import {Room} from "../../../models/RoomModel";
 import io from "../../../index";
 import {Events} from "../../../../../client/shared/WSEvents";
+import {RoomStatus} from "../../../../../client/shared/constants";
 import {Action} from "../../../../../client/shared/httpMsg/PlayerActMsg";
 import {ChangeStatusMsg} from "../../../../../client/shared/wsMsg/ChangeStatus";
 import {GameEndMsg} from "../../../../../client/shared/wsMsg/GameEnd";
@@ -111,6 +112,7 @@ export const GameHandler: IGameHandler = {
         winner = player;
       }
     })
+    room.status = RoomStatus.End;
     io.to(room.roomNumber).emit(Events.GAME_END, {
       winner,
     } as GameEndMsg);
