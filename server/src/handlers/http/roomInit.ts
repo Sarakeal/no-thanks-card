@@ -11,8 +11,6 @@ const roomInit: Middleware = async (ctx, next) => {
 
   const room = Room.getRoom(roomNumber);
 
-  console.log(room)
-
   const res: InitRoomResponse = {
     status: 200,
     msg: "ok",

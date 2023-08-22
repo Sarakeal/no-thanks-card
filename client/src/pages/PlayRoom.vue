@@ -11,7 +11,7 @@
         <div class="flex h-full justify-center mx-4">
           <div
               class="border-4 w-80 h-full font-bold py-10 flex justify-center items-center border-gray-900 rounded-3xl">
-            <div class="main-card-number">{{ gameInfo.card }}</div>
+            <div class="main-card-number">{{ gameInfo.card !== 0 ? gameInfo.card : '#' }}</div>
           </div>
           <div class="w-96 mx-4 flex items-center">
             <div>
@@ -41,8 +41,6 @@
               No thanks!
             </button>
           </div>
-<!--          <Btn class="float-left" content="Take it!" @click="accept"></Btn>-->
-<!--          <Btn class="float-left" content="No thanks!" @click="reject"></Btn>-->
         </div>
         <PlayerInfo :player="selfPlayer"></PlayerInfo>
       </div>
@@ -56,7 +54,6 @@ import {players, gameInfo} from "@/reactivity/game";
 import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {act} from "@/reactivity/playAction";
 import PlayerInfo from "@/components/PlayerInfo.vue";
-// import Btn from "@/components/Btn.vue";
 
 export default {
   name: "PlayRoom",

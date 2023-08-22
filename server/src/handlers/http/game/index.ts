@@ -169,7 +169,8 @@ export class Cards {
     for (let i = Cards.min; i <= Cards.max; i++) {
       this.cards.push(i);
     }
-    this.shuffle();
+    shuffle(this.cards);
+    this.cards.push(0); // 填充0作为结束标志
     this.currentCard = this.cards[this.index];
   }
 
@@ -185,17 +186,20 @@ export class Cards {
     return this.index === this.cards.length;
   }
 
-  private shuffle() {
-    let n = this.cards.length;
-    for (let i = 0; i < n; i++) {
-      const max = n - 1;
-      const min = i;
-      const rand = Math.floor(Math.random() * (max - min + 1)) + min;
-      // swap
-      const temp = this.cards[i];
-      this.cards[i] = this.cards[rand];
-      this.cards[rand] = temp;
-    }
-  }
+}
 
+function shuffle(cards: number[]) {
+  const n = cards.length;
+  for (let i = 0; i < n; i++) {
+    const rand = getRand(i, n - 1);
+    // swap
+    const temp = cards[i];
+    cards[i] = cards[rand];
+    cards[rand] = temp;
+  }
+}
+
+// 从min到min中随机一个数字
+function getRand(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

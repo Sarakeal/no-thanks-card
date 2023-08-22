@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
-    <div v-if="canPlay" class="absolute time-countdown text-2xl rounded-full border-2 border-blue-700 bg-white p-2">
-      <span>{{ gameInfo.timeout < 0 ? "-" : gameInfo.timeout }}</span> <span class="text-red-500">S</span>
+    <div v-if="canPlay" class="absolute time-countdown text-xl rounded-full border-2 border-gray-900 bg-white p-2">
+      <span>{{ gameInfo.timeout < 0 ? "0" : gameInfo.timeout }}</span> <span class="text-red-500">S</span>
     </div>
     <div class="mx-4 shadow-lg rounded-lg overflow-hidden border-2 relative">
       <div class="flex">
