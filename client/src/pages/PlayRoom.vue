@@ -54,6 +54,11 @@ import {players, gameInfo} from "@/reactivity/game";
 import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {act} from "@/reactivity/playAction";
 import PlayerInfo from "@/components/PlayerInfo.vue";
+import {initRoom} from "@/http/room";
+import {RoomStatus} from "../../shared/constants";
+import router from "@/router";
+import {joinRoomSocket} from "@/socket";
+import {showDialog} from "@/reactivity/dialog";
 
 export default {
   name: "PlayRoom",
@@ -68,6 +73,27 @@ export default {
   },
   data() {
     return {
+    }
+  },
+  async created() {
+    let roomNumber = this.$route.query['number'];
+    let password = this.$route.query['pw'];
+    const res = await initRoom({roomNumber: roomNumber})
+    if (res && res.status === 200) {
+      const data = res.data;
+      if (data.status === RoomStatus.Waiting) {
+        await router.push({
+          name: "waitRoom",
+          query: {
+            pw: password,
+            number: roomNumber
+          }
+        });
+      } else if (data.status === RoomStatus.Running || data.status === RoomStatus.End) {
+        joinRoomSocket(roomNumber);
+      } else {
+        showDialog("房间不存在！");
+      }
     }
   },
   computed: {
