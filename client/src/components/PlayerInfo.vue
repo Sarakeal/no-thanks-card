@@ -11,7 +11,7 @@
           <div class="text-center ">
             <div class="mt-4">
               <div>
-                <span class="info-desc">玩家信息：</span>
+                <span class="info-desc">玩家昵称：</span>
                 <span class="info-value">{{ player.name }}</span>
               </div>
               <div>
