@@ -8,5 +8,6 @@ export interface InitRoomRequest {
 
 export type InitRoomResponse = HttpRes<{
   status: RoomStatus,
+  creatorId: string,
   players: PlayerDef[]; // 当前所有玩家
 }>;

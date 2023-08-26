@@ -5,18 +5,20 @@
         不谢牌
       </div>
       <div class="player-list flex">
-        <div v-for="(player, index) in playerList" :key="index">
-          <div class="mx-4 mx-auto max-w-sm shadow-lg rounded-lg overflow-hidden">
-            <div class="px-6 py-4 sm:items-center">
-              <img :src="require(`../assets/avatar/${player.avatar}.png`)"
-                   class="block mx-auto mb-4 rounded border-gray-400 sm:mb-0 sm-ml-0"/>
-              <div class="text-center ">
-                <div class="mt-4">
-                  <p class="text-xl leading-tight">{{ player.name }}</p>
-                </div>
-              </div>
+        <div v-for="(player, index) in playerList" :key="index"
+             class="flex flex-col items-center justify-center mx-4 relative text-xs">
+          <div class="border-2 rounded-full relative">
+            <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"/>
+            <div
+                class="player-index-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+              {{ player.index }}
+            </div>
+            <div v-if="player.id === creatorId"
+                 class="room-host-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+              房主
             </div>
           </div>
+          <div class="text-xl font-bold text-orange-600 mt-4">{{ player.name }}</div>
         </div>
       </div>
       <div class="max-w-3xl mx-auto py-6 px-4">
@@ -42,6 +44,7 @@ export default {
   methods: {gameBegin},
   data() {
     return {
+      creatorId: '',
       playerList: players
     }
   },
@@ -51,6 +54,7 @@ export default {
     const res = await initRoom({roomNumber: roomNumber})
     if (res && res.status === 200) {
       const data = res.data;
+      this.creatorId = res.data.creatorId;
       if (data.status === RoomStatus.Waiting) {
         players.value = res.data.players;
         joinRoomSocket(roomNumber);
@@ -74,5 +78,14 @@ export default {
 
 
 <style lang="scss" scoped>
-
+.player-index-tag {
+  left: 83px;
+  top: 80px;
+  z-index: 20;
+}
+.room-host-tag {
+  left: 10px;
+  top: -10px;
+  z-index: 20;
+}
 </style>
