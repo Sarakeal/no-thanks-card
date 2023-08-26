@@ -10,15 +10,19 @@
           <div class="border-2 rounded-full relative">
             <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"/>
             <div
-                class="player-index-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+                :class="'bg-color-' + player.index"
+                class="player-index-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm">
               {{ player.index }}
             </div>
             <div v-if="player.id === creatorId"
-                 class="room-host-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+                 :class="'bg-color-' + player.index"
+                 class="room-host-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm">
               房主
             </div>
           </div>
-          <div class="text-xl font-bold text-orange-600 mt-4">{{ player.name }}</div>
+          <div
+              :class="'text-color-' + player.index"
+              class="text-xl font-bold mt-4">{{ player.name }}</div>
         </div>
       </div>
       <div class="max-w-3xl mx-auto py-6 px-4">
@@ -87,5 +91,54 @@ export default {
   left: 10px;
   top: -10px;
   z-index: 20;
+}
+.bg-color-0 {
+  background-color: #E43E16;
+}
+.bg-color-1 {
+  background-color: #F47406;
+}
+.bg-color-2 {
+  background-color: #F5A705;
+}
+.bg-color-3 {
+  background-color: #DD7126;
+}
+.bg-color-4 {
+  background-color: #7BCD23;
+}
+.bg-color-5 {
+  background-color: #057161;
+}
+.bg-color-6 {
+  background-color: #253292;
+}
+.bg-color-7 {
+  background-color: #701769;
+}
+
+.text-color-0 {
+  color: #E43E16;
+}
+.text-color-1 {
+  color: #F47406;
+}
+.text-color-2 {
+  color: #F5A705;
+}
+.text-color-3 {
+  color: #DD7126;
+}
+.text-color-4 {
+  color: #7BCD23;
+}
+.text-color-5 {
+  color: #057161;
+}
+.text-color-6 {
+  color: #253292;
+}
+.text-color-7 {
+  color: #701769;
 }
 </style>
