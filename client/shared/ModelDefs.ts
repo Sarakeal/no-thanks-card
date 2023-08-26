@@ -1,9 +1,7 @@
 import {AvatarType} from "./constants";
 
-export type ID = string; // 玩家 id
-
 export interface TokenDef {
-  ID: ID;
+  ID: string;
   datetime: number;
   roomNumber: string;
 }
@@ -11,12 +9,12 @@ export interface TokenDef {
 
 export interface RoomDef {
   roomNumber: string; // 房间号码, 6 位数字
-  creatorID: ID; // 创建者 ID
+  creatorID: string; // 创建者 ID
   players: PlayerDef[]; // 参与者
 }
 
 export interface PlayerDef {
-  _id: ID;
+  id: string;
 
   name: string;
 
@@ -30,9 +28,10 @@ export interface PlayerDef {
 }
 
 export interface GameInfo {
-  dealerMoney: number; // 庄家的钱
 
-  timeout: number; // 有多少秒可以确认
-
-  card: number; // 当前卡牌
+    boardCard: number,
+    money: number,
+    leftCardNumber: number,
+    creatorId: string,
+    currentPlayerId: string,
 }

@@ -11,6 +11,12 @@ export function setToken(ID: string, roomNumber: string) {
   window.localStorage.setItem(KEY, JSON.stringify(token));
 }
 
+export function getSelfPlayerId() {
+  const str = window.localStorage.getItem(KEY) || "{}";
+  const token = JSON.parse(str) as TokenDef;
+  return token.ID || "";
+}
+
 export function getToken(): TokenDef | null {
   try {
     const str = window.localStorage.getItem(KEY) || "{}";

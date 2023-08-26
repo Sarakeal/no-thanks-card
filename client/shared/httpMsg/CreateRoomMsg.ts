@@ -1,4 +1,4 @@
-import {ID, PlayerDef} from "../ModelDefs";
+import {PlayerDef} from "../ModelDefs";
 import { HttpRes } from "./_httpResTemplate";
 
 export interface CreateRoomRequest {
@@ -10,6 +10,6 @@ export interface CreateRoomRequest {
 
 export type CreateRoomResponse = HttpRes<{
   roomNumber: string;
-  ID: ID;
+  ID: string;
   player: PlayerDef;
 }>;

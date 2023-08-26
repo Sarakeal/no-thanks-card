@@ -1,10 +1,8 @@
-import {
-    ID, PlayerDef
-} from "../../../client/shared/ModelDefs";
+import {PlayerDef} from "../../../client/shared/ModelDefs";
 import {AvatarType} from "../../../client/shared/constants";
 
 export class Player implements PlayerDef {
-  _id: ID;
+  id: string;
 
   name: string;
 
@@ -20,7 +18,7 @@ export class Player implements PlayerDef {
     this.name = name;
     this.index = index;
 
-    this._id = Math.random().toString(36).substring(2) + this.index;
+    this.id = Math.random().toString(36).substring(2) + this.index;
     this.cards = [];
     this.money = 5;
   }

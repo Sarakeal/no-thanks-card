@@ -5,6 +5,7 @@ import CreateRoom from '../pages/CreateRoom.vue'
 import WaitRoom from '../pages/WaitRoom.vue'
 import JoinRoom from '../pages/JoinRoom.vue'
 import PlayRoom from '../pages/PlayRoom.vue'
+import Test from '../pages/PlayRoom.vue'
 
 
 Vue.use(VueRouter)
@@ -34,7 +35,12 @@ const routes: Array<RouteConfig> = [
     path: '/play',
     name: 'playRoom',
     component: PlayRoom
-  }
+  },
+  // {
+  //   path: '/test',
+  //   name: 'test',
+  //   component: Test
+  // }
 ]
 
 const router = new VueRouter({

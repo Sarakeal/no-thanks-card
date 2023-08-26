@@ -2,7 +2,7 @@ export function calcScore(pCards: number[]) {
   const res = []; // 双层数组
   // 如果数字能连在一起，只统计上最小的数字作为分数，比如：3，4，5，7，最终分数为3+7=10
   const cards = [...pCards];
-  cards.sort();
+  cards.sort((a, b) => a - b);
   for (let i = 0; i < cards.length; i++) {
     let j = i;
     while (j + 1 < cards.length && cards[j + 1] === cards[j] + 1) {
@@ -21,4 +21,125 @@ export function calcScore(pCards: number[]) {
     score += arr[0];
   });
   return score;
+}
+
+// 从min到min中随机一个数字
+export function getRand(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const tightLeftOffset = 3;
+const space = 54;
+const cardWidth = 121;
+const scaleRate = 0.4;
+const smallCardWidth = cardWidth * scaleRate;
+const groupPreLineLimit = 7;
+const topOffset = 90;
+
+export function generateCards() {
+  const cards = [];
+  for (let i = 0; i <= 104; i++) {
+    cards.push(i);
+  }
+  let n = 80;
+  while (n-- > 0) {
+    const index = getRand(0, cards.length);
+    cards.splice(index, 1);
+  }
+  return cards;
+}
+
+export function calcHandCardPosition(cards: number[]) {
+  cards.sort((a, b) => a - b);
+  // const offset = 26;
+  let totalLeftOffset = 0;
+  const pCards = [];
+  for (let i = 0; i < cards.length; i++) {
+    let j = i;
+    while (j + 1 < cards.length && cards[j + 1] === cards[j] + 1) {
+      j++;
+    }
+    if (i > 0) totalLeftOffset += space;
+    pCards.push({
+      number: cards[i],
+      left: totalLeftOffset,
+    });
+    for (let k = i + 1; k < j; k++) {
+      // totalLeftOffset += k === i + 1 ? offset : tightLeftOffset;
+      totalLeftOffset += tightLeftOffset;
+      pCards.push({
+        number: cards[k],
+        left: totalLeftOffset,
+      });
+    }
+    i = j;
+  }
+  return {
+    cards: pCards,
+    totalWidth: totalLeftOffset + smallCardWidth,
+  }
+}
+
+export function calcPlayerCardPosition(cards: number[]) {
+  cards.sort((a, b) => a - b);
+  const pCards = [];
+  let groupCount = 0;
+  const baseLeftOffset = 0;
+  let totalLeftOffset = baseLeftOffset;
+  let totalTopOffset = -topOffset;
+  for (let i = 0; i < cards.length; i++) {
+    let j = i;
+    while (j + 1 < cards.length && cards[j + 1] === cards[j] + 1) {
+      j++;
+    }
+    if (groupCount % groupPreLineLimit === 0) {
+      totalTopOffset += topOffset;
+      totalLeftOffset = baseLeftOffset;
+    } else {
+      if (i > 0) totalLeftOffset += space;
+    }
+    groupCount++;
+
+    pCards.push({
+      number: cards[i],
+      left: totalLeftOffset,
+      top: totalTopOffset,
+    });
+    for (let k = i + 1; k < j; k++) {
+      totalLeftOffset += tightLeftOffset;
+      pCards.push({
+        number: cards[k],
+        left: totalLeftOffset,
+        top: totalTopOffset,
+      });
+    }
+    i = j;
+  }
+  return {
+    cards: pCards,
+    totalWidth: totalLeftOffset + smallCardWidth,
+    totalHeight: totalTopOffset,
+  }
+}
+
+// 在数字number的range范围内的卡牌设置up=true属性
+export function activeRangeCard(cards: any[], number:number, range = 3) {
+  let offset = 1;
+  while (offset <= range) {
+    const found = cards.find(card => card.number === number + offset);
+    if (found) {
+      found.up = true;
+      break;
+    }
+    offset++;
+  }
+  offset = 1;
+  while (offset <= range) {
+    const found = cards.find(card => card.number === number - offset);
+    if (found) {
+      found.up = true;
+      break;
+    }
+    offset++;
+  }
 }

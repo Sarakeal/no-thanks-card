@@ -1,4 +1,4 @@
-import {ID, PlayerDef, RoomDef,} from "../../../client/shared/ModelDefs";
+import {PlayerDef, RoomDef,} from "../../../client/shared/ModelDefs";
 import {AvatarType, RoomStatus} from "../../../client/shared/constants";
 import {Player} from "./PlayerModel";
 import {createError} from "../middleware/errorHandler";
@@ -29,7 +29,7 @@ const AVATAR_LIST = [
 
 export class Room implements RoomDef {
   roomNumber: string;
-  creatorID: ID;
+  creatorID: string;
   players: Player[];
 
   currentPlayer: Player;
@@ -62,7 +62,7 @@ export class Room implements RoomDef {
 
     shuffle(this.avatarList);
 
-    this.creatorID = creator._id;
+    this.creatorID = creator.id;
     creator.avatar = this.avatarList[0];
 
     this.password = password;
@@ -115,7 +115,7 @@ export class Room implements RoomDef {
   }
 
   getPlayerById(id: string): Player {
-    const player = this.players.find((p) => p._id === id);
+    const player = this.players.find((p) => p.id === id);
     if (!player)
       return createError({status: 401, msg: "id 错误"});
     return player;

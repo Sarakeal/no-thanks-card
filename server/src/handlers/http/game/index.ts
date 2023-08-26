@@ -91,12 +91,13 @@ export const GameHandler: IGameHandler = {
     }, (timeout + 1) * 1000);
 
     io.to(room.roomNumber).emit(Events.CHANGE_STATUS, {
-      player: room.currentPlayer,
       players: room.getPlayers(),
       gameInfo: {
-        dealerMoney: room.dealerMoney,
-        timeout,
-        card: room.cards.currentCard,
+        boardCard: room.cards.currentCard,
+        money: room.dealerMoney,
+        leftCardNumber: room.cards.left,
+        creatorId: room.creatorID,
+        currentPlayerId: room.currentPlayer.id,
       }
     } as ChangeStatusMsg);
   },
@@ -142,6 +143,8 @@ export class Cards {
 
   index: number = 5; // 起始从5开始，也就是丢弃前5张牌
 
+  left: number = 0;
+
   constructor() {
     this.cards = [];
     for (let i = Cards.min; i <= Cards.max; i++) {
@@ -150,10 +153,12 @@ export class Cards {
     shuffle(this.cards);
     this.cards.push(0); // 填充0作为结束标志
     this.currentCard = this.cards[this.index];
+    this.left = Cards.max - Cards.min + 1 - 5;
   }
 
   next() {
     this.index++;
+    this.left--;
     const card = this.cards[this.index];
 
     this.currentCard = card;

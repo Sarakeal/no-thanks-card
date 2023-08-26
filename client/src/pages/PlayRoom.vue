@@ -1,78 +1,134 @@
 <template>
-  <div class="h-screen ">
-    <div class="max-w-3xl mx-auto py-10 px-4 text-6xl">
-      不谢牌
-    </div>
-    <div class="grid grid-rows-1 grid-cols-3 gap-4">
-      <div v-for="(player) in firstRowPlayers" :key="player._id" class="col-span-1 m-4">
-        <PlayerInfo :player="player"></PlayerInfo>
-      </div>
-      <div class="row-span-1 col-span-3">
-        <div class="flex h-full justify-center mx-4">
-          <div
-              class="border-4 w-64 h-full font-bold py-10 flex justify-center items-center border-gray-900 rounded-3xl">
-            <div class="main-card-number">{{ gameInfo.card !== 0 ? gameInfo.card : '#' }}</div>
-          </div>
-          <div class="w-96 mx-4 flex items-center">
-            <div>
-              <div class="flex flex-wrap">
-                <div v-for="index in [...Array(gameInfo.dealerMoney || 0).keys()]" :key="'dm' + index" class="mx-4 my-4">
-                  <div class="w-16 h-16 bg-blue-600 rounded-full border-gray-900 border-2"></div>
+  <div id="root">
+    <div class="select-none flex flex-col min-h-screen">
+      <div class="flex-grow flex flex-col">
+        <div class="pt-2 flex items-center justify-center">
+          <span class="text-xl">No thanks card</span>
+        </div>
+        <div class="flex items-center justify-center text-l mt-4">
+          <div class="mx-4">桌上筹码：<span class="text-xl font-bold text-orange-600">{{ gameInfo.money }}</span></div>
+          <div class="mx-4">剩余卡牌：<span class="text-xl font-bold text-orange-600">{{ gameInfo.leftCardNumber }}</span></div>
+        </div>
+        <div class="flex-grow flex justify-around mt-10">
+          <div class="w-36 flex flex-col">
+            <div v-for="(player, index) in gameInfo.lPlayers" :key="index"
+                 class="flex flex-col items-center justify-center mb-24 relative text-xs">
+              <div class="border-2 rounded-full relative">
+                <img class="w-24" :src="require(`../assets/avatar/${player.avatar}.png`)"/>
+                <div
+                    class="player-index-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+                  {{ player.index }}
+                </div>
+                <div v-if="player.id === gameInfo.creatorId"
+                     class="room-host-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+                  房主
+                </div>
+                <div v-if="player.id === gameInfo.currentPlayerId"
+                     class="time-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-2xl">
+                  ⏰
                 </div>
               </div>
-              <div class="text-4xl">桌上筹码总数：{{ gameInfo.dealerMoney || 0 }}</div>
+              <div class="text-xl font-bold text-orange-600">{{ player.name }}</div>
+              <div>筹码：<span class="text-xl font-bold text-orange-600">{{ player.money }}</span></div>
+              <div>分数：<span class="text-xl font-bold text-orange-600">{{ player.score }}</span></div>
+              <div class="player-card-list left" :style="{top: player.cardsTop + 'px'}">
+                <div v-for="(card, index) in player.cards" :key="index"
+                     :style="{left: card.left + 'px', top: card.top + 'px'}"
+                     :class="['card-' + card.number, {active: card.up}]"
+                     class="card small-card"></div>
+              </div>
             </div>
           </div>
+          <div class="w-36 flex flex-col">
+            <div v-for="(player, index) in gameInfo.rPlayers" :key="index"
+                 class="flex flex-col items-center justify-center mb-24 relative text-xs">
+              <div class="border-2 rounded-full relative">
+                <img class="w-24" :src="require(`../assets/avatar/${player.avatar}.png`)"/>
+                <div
+                    class="player-index-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+                  {{ player.index }}
+                </div>
+                <div v-if="player.id === gameInfo.creatorId"
+                    class="room-host-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm bg-orange-600">
+                  房主
+                </div>
+                <div v-if="player.id === gameInfo.currentPlayerId"
+                     class="time-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-2xl">
+                  ⏰
+                </div>
+              </div>
+              <div class="text-xl font-bold text-orange-600">{{ player.name }}</div>
+              <div>筹码：<span class="text-xl font-bold text-orange-600">{{ player.money }}</span></div>
+              <div>分数：<span class="text-xl font-bold text-orange-600">{{ player.score }}</span></div>
+              <div class="player-card-list right" :style="{top: player.cardsTop + 'px'}">
+                <div v-for="(card, index) in player.cards" :key="index"
+                     :style="{left: card.left + 'px', top: card.top + 'px'}"
+                     :class="['card-' + card.number, {active: card.up}]"
+                     class="card small-card"></div>
+              </div>
+            </div>
+          </div>
+          <div class="absolute top-1/2 board-card card-reverse color-3">
+            <div class="card" :class="'card-' + gameInfo.boardCard"></div>
+          </div>
         </div>
-      </div>
-      <div v-for="(player) in secondRowPlayers" :key="player._id" class="col-span-1 m-4">
-        <PlayerInfo :player="player"></PlayerInfo>
-      </div>
-      <div v-for="index in [...Array(2 - secondRowPlayers.length).keys()]" :key="'space' + index" class="col-span-1 m-4"></div>
-      <div class="col-span-1 my-4 relative">
-        <div class="absolute action-btn" v-show="canPlay">
-          <div class="float-left max-w-3xl mx-auto py-6 px-4">
-            <button @click="accept" class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
+        <div>
+          <div class="flex justify-center items-center">
+            <button @click="accept"
+                    v-show="selfPlayerID === gameInfo.currentPlayerId"
+                    class="m-2 bg-green-500 hover:bg-green-600 active:bg-green-700  rounded-full py-2 px-8 text-white font-semibold shadow-md">
               Take it!
             </button>
-          </div>
-          <div  class="float-left max-w-3xl mx-auto py-6 px-4">
-            <button @click="reject" class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
+            <button @click="reject"
+                    v-show="selfPlayerID === gameInfo.currentPlayerId && gameInfo.selfPlayer.money > 0"
+                    class="m-2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-full py-2 px-8 text-white font-semibold shadow-md">
               No thanks!
             </button>
           </div>
+          <div class="flex justify-center items-center">
+
+            <div class="mx-4">筹码：<span class="text-xl font-bold text-orange-600">{{ gameInfo.selfPlayer.money }}</span></div>
+            <div class="mx-4">分数：<span class="text-xl font-bold text-orange-600">{{ gameInfo.selfPlayer.score }}</span></div>
+          </div>
+          <div class="card-list pb-10 mx-auto overflow-x-auto relative"
+               :style="{width: gameInfo.totalWidth + 'px'}">
+            <div v-for="(card, index) in gameInfo.cards" :key="index" class="card small-card"
+                 :class="['card-' + card.number, {active: card.up}]"
+                 :style="{left: card.left + 'px', top: '-30px'}"></div>
+          </div>
+
         </div>
-        <PlayerInfo :player="selfPlayer"></PlayerInfo>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {currentPlayer, selfPlayer} from "@/reactivity/game";
-import {players, gameInfo} from "@/reactivity/game";
-import {Action} from "../../shared/httpMsg/PlayerActMsg";
+import {activeRangeCard, calcHandCardPosition, calcPlayerCardPosition, calcScore} from "@/utils";
 import {act} from "@/reactivity/playAction";
-import PlayerInfo from "@/components/PlayerInfo.vue";
+import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {initRoom} from "@/http/room";
 import {RoomStatus} from "../../shared/constants";
 import router from "@/router";
 import {joinRoomSocket} from "@/socket";
 import {showDialog} from "@/reactivity/dialog";
+import {gameInfo} from "@/reactivity/game";
+import {getSelfPlayerId} from "@/utils/token";
 
 export default {
   name: "PlayRoom",
-  components: {PlayerInfo},
+  components: {},
+  data() {
+    return {
+      selfPlayerID: getSelfPlayerId(),
+    }
+  },
   methods: {
     async accept() {
       await act(Action.ACCEPT);
     },
     async reject() {
       await act(Action.REJECT);
-    }
-  },
-  data() {
-    return {
     }
   },
   async created() {
@@ -97,32 +153,674 @@ export default {
     }
   },
   computed: {
-    gameInfo: function() {
-      return gameInfo.value;
-    },
-    canPlay: function () {
-      return selfPlayer.value._id === currentPlayer.value._id;
-    },
-    selfPlayer: function () {
-      return players.value.find(p => p._id === selfPlayer.value._id);
-    },
-    firstRowPlayers: function () {
-      return players.value.filter(p => p._id !== selfPlayer.value._id).splice(0, 3) || [];
-    },
-    secondRowPlayers: function () {
-      return players.value.filter(p => p._id !== selfPlayer.value._id).splice(3, 5) || [];
-    },
+    gameInfo() {
+      let game = gameInfo.value;
+      const lPlayers = [];
+      const rPlayers = [];
+      let selfPlayer = {};
+      let cards = [];
+      let totalWidth = 0;
+      let index = 0;
+      const boardCard = game.gameInfo.boardCard;
+
+      for (let i = 0; i < game.players.length; i++) {
+        let player = game.players[i];
+        if (this.selfPlayerID === player.id) {
+          let handCards = calcHandCardPosition(player.cards);
+          player.score = calcScore(player.cards);
+          cards = handCards.cards;
+          totalWidth = handCards.totalWidth;
+          activeRangeCard(cards, boardCard);
+          selfPlayer = player;
+          continue;
+        }
+        let playersCards = calcPlayerCardPosition(player.cards);
+        player.score = calcScore(player.cards);
+        player.cards = playersCards.cards;
+        player.cardsTop = -playersCards.totalHeight / 4 + 20;
+        activeRangeCard(player.cards, boardCard);
+        if (index % 2 === 0) {
+          lPlayers.push(player);
+        } else {
+          rPlayers.push(player);
+        }
+        index++;
+      }
+      return {
+        boardCard: boardCard,
+        creatorId: game.gameInfo.creatorId,
+        currentPlayerId: game.gameInfo.currentPlayerId,
+        money: game.gameInfo.money,
+        leftCardNumber: game.gameInfo.leftCardNumber,
+        lPlayers: lPlayers,
+        rPlayers: rPlayers,
+        selfPlayer: selfPlayer,
+        cards: cards,
+        totalWidth: totalWidth,
+      }
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.main-card-number {
-  font-size: 12rem;
+#root {
+  background-color: #f0f8e8;
 }
 
-.action-btn {
+.card {
+  box-sizing: initial;
+  background-image: url("../../src/assets/cards.png");
+  width: 121px;
+  height: 170px;
+  position: absolute;
+  border-radius: 11px;
+}
+
+.small-card {
+  transform: scale(0.4);
+  transform-origin: left center;
+}
+
+.player-card-list {
+  transform: scale(0.6);
+  position: absolute;
+}
+
+.player-card-list.left {
+  left: 130px;
+}
+
+.player-card-list.right {
+  left: -220px;
+}
+
+.card-list {
+  height: 170px;
+}
+
+.player-index-tag {
+  left: 83px;
+  top: 80px;
+  z-index: 20;
+}
+.room-host-tag {
+  left: 10px;
+  top: -10px;
+  z-index: 20;
+}
+
+.time-tag {
+  top: -10px;
+  left: 83px;
+  z-index: 20;
+}
+
+.board-card {
+  box-sizing: initial;
+  height: 170px;
+  left: 50%;
+  padding: 8px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+}
+
+.board-card:after, .board-card:before {
+  -webkit-animation-duration: 3s;
+  animation-duration: 3s;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: uno-direction-1;
+  animation-name: uno-direction-1;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  bottom: 0;
+  content: "";
   left: 0;
-  top: -5rem;
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.board-card:after {
+  -webkit-animation-delay: -1.5s;
+  animation-delay: -1.5s
+}
+
+.board-card.color-3:after, .board-card.color-3:before {
+  border-color: #0095da
+}
+
+.board-card.card-reverse:after, .board-card.card-reverse:before {
+  -webkit-animation-name: uno-direction-0;
+  animation-name: uno-direction-0
+}
+
+@-webkit-keyframes uno-direction-0 {
+  0%, to {
+    -webkit-clip-path: inset(0 0 95% 0);
+    clip-path: inset(0 0 95% 0)
+  }
+
+  25% {
+    -webkit-clip-path: inset(0 95% 0 0);
+    clip-path: inset(0 95% 0 0)
+  }
+
+  50% {
+    -webkit-clip-path: inset(95% 0 0 0);
+    clip-path: inset(95% 0 0 0)
+  }
+
+  75% {
+    -webkit-clip-path: inset(0 0 0 95%);
+    clip-path: inset(0 0 0 95%)
+  }
+}
+
+@keyframes uno-direction-0 {
+  0%, to {
+    -webkit-clip-path: inset(0 0 95% 0);
+    clip-path: inset(0 0 95% 0)
+  }
+
+  25% {
+    -webkit-clip-path: inset(0 95% 0 0);
+    clip-path: inset(0 95% 0 0)
+  }
+
+  50% {
+    -webkit-clip-path: inset(95% 0 0 0);
+    clip-path: inset(95% 0 0 0)
+  }
+
+  75% {
+    -webkit-clip-path: inset(0 0 0 95%);
+    clip-path: inset(0 0 0 95%)
+  }
+}
+
+@-webkit-keyframes uno-direction-1 {
+  0%, to {
+    -webkit-clip-path: inset(0 0 95% 0);
+    clip-path: inset(0 0 95% 0)
+  }
+
+  25% {
+    -webkit-clip-path: inset(0 0 0 95%);
+    clip-path: inset(0 0 0 95%)
+  }
+
+  50% {
+    -webkit-clip-path: inset(95% 0 0 0);
+    clip-path: inset(95% 0 0 0)
+  }
+
+  75% {
+    -webkit-clip-path: inset(0 95% 0 0);
+    clip-path: inset(0 95% 0 0)
+  }
+}
+
+@keyframes uno-direction-1 {
+  0%, to {
+    -webkit-clip-path: inset(0 0 95% 0);
+    clip-path: inset(0 0 95% 0)
+  }
+
+  25% {
+    -webkit-clip-path: inset(0 0 0 95%);
+    clip-path: inset(0 0 0 95%)
+  }
+
+  50% {
+    -webkit-clip-path: inset(95% 0 0 0);
+    clip-path: inset(95% 0 0 0)
+  }
+
+  75% {
+    -webkit-clip-path: inset(0 95% 0 0);
+    clip-path: inset(0 95% 0 0)
+  }
+}
+
+.active {
+  animation: card-beat 2s infinite;
+  z-index: 10;
+}
+
+@keyframes card-beat {
+  0% {
+    top: -30px;
+  }
+  50% {
+    top: -50px;
+  }
+  100% {
+    top: -30px;
+  }
+}
+
+.card-0 {
+  background-position: -48px -67px;
+}
+
+.card-1 {
+  background-position: -192px -67px;
+}
+
+.card-2 {
+  background-position: -336px -67px;
+}
+
+.card-3 {
+  background-position: -480px -67px;
+}
+
+.card-4 {
+  background-position: -624px -67px;
+}
+
+.card-5 {
+  background-position: -768px -67px;
+}
+
+.card-6 {
+  background-position: -912px -67px;
+}
+
+.card-7 {
+  background-position: -1056px -67px;
+}
+
+.card-8 {
+  background-position: -1200px -67px;
+}
+
+.card-9 {
+  background-position: -1344px -67px;
+}
+
+.card-10 {
+  background-position: -1488px -67px;
+}
+
+.card-11 {
+  background-position: -192px -259px;
+}
+
+.card-12 {
+  background-position: -336px -259px;
+}
+
+.card-13 {
+  background-position: -480px -259px;
+}
+
+.card-14 {
+  background-position: -624px -259px;
+}
+
+.card-15 {
+  background-position: -768px -259px;
+}
+
+.card-16 {
+  background-position: -912px -259px;
+}
+
+.card-17 {
+  background-position: -1056px -259px;
+}
+
+.card-18 {
+  background-position: -1200px -259px;
+}
+
+.card-19 {
+  background-position: -1344px -259px;
+}
+
+.card-20 {
+  background-position: -1488px -259px;
+}
+
+.card-21 {
+  background-position: -192px -451px;
+}
+
+.card-22 {
+  background-position: -336px -451px;
+}
+
+.card-23 {
+  background-position: -480px -451px;
+}
+
+.card-24 {
+  background-position: -624px -451px;
+}
+
+.card-25 {
+  background-position: -768px -451px;
+}
+
+.card-26 {
+  background-position: -912px -451px;
+}
+
+.card-27 {
+  background-position: -1056px -451px;
+}
+
+.card-28 {
+  background-position: -1200px -451px;
+}
+
+.card-29 {
+  background-position: -1344px -451px;
+}
+
+.card-30 {
+  background-position: -1488px -451px;
+}
+
+.card-31 {
+  background-position: -192px -643px;
+}
+
+.card-32 {
+  background-position: -336px -643px;
+}
+
+.card-33 {
+  background-position: -480px -643px;
+}
+
+.card-34 {
+  background-position: -624px -643px;
+}
+
+.card-35 {
+  background-position: -768px -643px;
+}
+
+.card-36 {
+  background-position: -912px -643px;
+}
+
+.card-37 {
+  background-position: -1056px -643px;
+}
+
+.card-38 {
+  background-position: -1200px -643px;
+}
+
+.card-39 {
+  background-position: -1344px -643px;
+}
+
+.card-40 {
+  background-position: -1488px -643px;
+}
+
+.card-41 {
+  background-position: -192px -835px;
+}
+
+.card-42 {
+  background-position: -336px -835px;
+}
+
+.card-43 {
+  background-position: -480px -835px;
+}
+
+.card-44 {
+  background-position: -624px -835px;
+}
+
+.card-45 {
+  background-position: -768px -835px;
+}
+
+.card-46 {
+  background-position: -912px -835px;
+}
+
+.card-47 {
+  background-position: -1056px -835px;
+}
+
+.card-48 {
+  background-position: -1200px -835px;
+}
+
+.card-49 {
+  background-position: -1344px -835px;
+}
+
+.card-50 {
+  background-position: -1488px -835px;
+}
+
+.card-51 {
+  background-position: -192px -1027px;
+}
+
+.card-52 {
+  background-position: -336px -1027px;
+}
+
+.card-53 {
+  background-position: -480px -1027px;
+}
+
+.card-54 {
+  background-position: -624px -1027px;
+}
+
+.card-55 {
+  background-position: -768px -1027px;
+}
+
+.card-56 {
+  background-position: -912px -1027px;
+}
+
+.card-57 {
+  background-position: -1056px -1027px;
+}
+
+.card-58 {
+  background-position: -1200px -1027px;
+}
+
+.card-59 {
+  background-position: -1344px -1027px;
+}
+
+.card-60 {
+  background-position: -1488px -1027px;
+}
+
+.card-61 {
+  background-position: -192px -1219px;
+}
+
+.card-62 {
+  background-position: -336px -1219px;
+}
+
+.card-63 {
+  background-position: -480px -1219px;
+}
+
+.card-64 {
+  background-position: -624px -1219px;
+}
+
+.card-65 {
+  background-position: -768px -1219px;
+}
+
+.card-66 {
+  background-position: -912px -1219px;
+}
+
+.card-67 {
+  background-position: -1056px -1219px;
+}
+
+.card-68 {
+  background-position: -1200px -1219px;
+}
+
+.card-69 {
+  background-position: -1344px -1219px;
+}
+
+.card-70 {
+  background-position: -1488px -1219px;
+}
+
+.card-71 {
+  background-position: -192px -1411px;
+}
+
+.card-72 {
+  background-position: -336px -1411px;
+}
+
+.card-73 {
+  background-position: -480px -1411px;
+}
+
+.card-74 {
+  background-position: -624px -1411px;
+}
+
+.card-75 {
+  background-position: -768px -1411px;
+}
+
+.card-76 {
+  background-position: -912px -1411px;
+}
+
+.card-77 {
+  background-position: -1056px -1411px;
+}
+
+.card-78 {
+  background-position: -1200px -1411px;
+}
+
+.card-79 {
+  background-position: -1344px -1411px;
+}
+
+.card-80 {
+  background-position: -1488px -1411px;
+}
+
+.card-81 {
+  background-position: -192px -1603px;
+}
+
+.card-82 {
+  background-position: -336px -1603px;
+}
+
+.card-83 {
+  background-position: -480px -1603px;
+}
+
+.card-84 {
+  background-position: -624px -1603px;
+}
+
+.card-85 {
+  background-position: -768px -1603px;
+}
+
+.card-86 {
+  background-position: -912px -1603px;
+}
+
+.card-87 {
+  background-position: -1056px -1603px;
+}
+
+.card-88 {
+  background-position: -1200px -1603px;
+}
+
+.card-89 {
+  background-position: -1344px -1603px;
+}
+
+.card-90 {
+  background-position: -1488px -1603px;
+}
+
+.card-91 {
+  background-position: -192px -1795px;
+}
+
+.card-92 {
+  background-position: -336px -1795px;
+}
+
+.card-93 {
+  background-position: -480px -1795px;
+}
+
+.card-94 {
+  background-position: -624px -1795px;
+}
+
+.card-95 {
+  background-position: -768px -1795px;
+}
+
+.card-96 {
+  background-position: -912px -1795px;
+}
+
+.card-97 {
+  background-position: -1056px -1795px;
+}
+
+.card-98 {
+  background-position: -1200px -1795px;
+}
+
+.card-99 {
+  background-position: -1344px -1795px;
+}
+
+.card-100 {
+  background-position: -1488px -1795px;
+}
+
+.card-101 {
+  background-position: -192px -1987px;
+}
+
+.card-102 {
+  background-position: -336px -1987px;
+}
+
+.card-103 {
+  background-position: -480px -1987px;
+}
+
+.card-104 {
+  background-position: -624px -1987px;
 }
 </style>
