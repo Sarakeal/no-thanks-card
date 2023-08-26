@@ -77,19 +77,19 @@
           </div>
         </div>
         <div>
-          <div class="flex justify-center items-center">
-            <button @click="accept"
-                    v-show="selfPlayerID === gameInfo.currentPlayerId"
-                    class="m-2 bg-green-500 hover:bg-green-600 active:bg-green-700  rounded-full py-2 px-8 text-white font-semibold shadow-md">
-              Take it!
-            </button>
-            <button @click="reject"
-                    v-show="selfPlayerID === gameInfo.currentPlayerId && gameInfo.selfPlayer.money > 0"
-                    class="m-2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-full py-2 px-8 text-white font-semibold shadow-md">
-              No thanks!
-            </button>
-          </div>
-          <div class="flex justify-center items-center">
+          <div class="flex justify-center items-center relative">
+            <div class="flex justify-center items-center absolute -top-14">
+              <button @click="accept"
+                      v-show="selfPlayerID === gameInfo.currentPlayerId"
+                      class="m-2 bg-green-500 hover:bg-green-600 active:bg-green-700  rounded-full py-2 px-8 text-white font-semibold shadow-md">
+                Take it!
+              </button>
+              <button @click="reject"
+                      v-show="selfPlayerID === gameInfo.currentPlayerId && gameInfo.selfPlayer.money > 0"
+                      class="m-2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-full py-2 px-8 text-white font-semibold shadow-md">
+                No thanks!
+              </button>
+            </div>
             <div class="mx-4">筹码：<span class="text-xl font-bold text-orange-600">{{ gameInfo.selfPlayer.money }}</span></div>
             <div class="mx-4">分数：<span class="text-xl font-bold text-orange-600">{{ gameInfo.selfPlayer.score }}</span></div>
           </div>
