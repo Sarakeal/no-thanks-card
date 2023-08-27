@@ -18,6 +18,14 @@ const roomInit: Middleware = async (ctx, next) => {
       status: room.status,
       creatorId: room.creatorID,
       players: room.getPlayers(),
+      gameInfo: {
+        boardCard: room.cards.currentCard,
+        money: room.dealerMoney,
+        leftCardNumber: room.cards.left,
+        creatorId: room.creatorID,
+        currentPlayerId: room.currentPlayer.id,
+        isFinished: room.cards.isFinished(),
+      }
     },
   };
 

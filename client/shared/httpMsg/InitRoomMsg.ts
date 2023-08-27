@@ -1,4 +1,4 @@
-import { PlayerDef } from "../ModelDefs";
+import {GameInfo, PlayerDef} from "../ModelDefs";
 import { HttpRes } from "./_httpResTemplate";
 import {RoomStatus} from "../constants";
 
@@ -9,5 +9,6 @@ export interface InitRoomRequest {
 export type InitRoomResponse = HttpRes<{
   status: RoomStatus,
   creatorId: string,
-  players: PlayerDef[]; // 当前所有玩家
+  players: PlayerDef[]; // 同步所有玩家信息
+  gameInfo: GameInfo; // 游戏相关信息
 }>;

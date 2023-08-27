@@ -1,6 +1,7 @@
 import {ChangeStatusMsg} from "../../shared/wsMsg/ChangeStatus";
-import {gameInfo} from "@/reactivity/game";
+import store from "@/store";
 
 export default function changeStatus(msg: ChangeStatusMsg) {
-  gameInfo.value = msg;
+  store.commit('setPlayers', msg.players);
+  store.commit('setGameInfo', msg.gameInfo);
 }

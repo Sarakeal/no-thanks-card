@@ -13,7 +13,7 @@
         </div>
         <div class="flex-grow flex justify-around mt-10">
           <div class="w-36 flex flex-col">
-            <div v-for="(player, index) in gameInfo.lPlayers" :key="index"
+            <div v-for="(player, index) in lPlayers" :key="index"
                  class="flex flex-col items-center justify-center mb-24 relative text-xs">
               <div class="border-2 rounded-full relative">
                 <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"
@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="w-36 flex flex-col">
-            <div v-for="(player, index) in gameInfo.rPlayers" :key="index"
+            <div v-for="(player, index) in rPlayers" :key="index"
                  class="flex flex-col items-center justify-center mb-24 relative text-xs">
               <div class="border-2 rounded-full relative">
                 <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"
@@ -93,17 +93,17 @@
                 Take it!
               </button>
               <button @click="reject"
-                      v-show="selfPlayerID === gameInfo.currentPlayerId && gameInfo.selfPlayer.money > 0"
+                      v-show="selfPlayerID === gameInfo.currentPlayerId && selfPlayer.money > 0"
                       class="m-2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-full py-2 px-8 text-white font-semibold shadow-md">
                 No thanks!
               </button>
             </div>
-            <div class="mx-4">筹码：<span class="text-xl font-bold text-orange-600">{{gameInfo.selfPlayer.money }}</span></div>
-            <div class="mx-4">分数：<span class="text-xl font-bold text-orange-600">{{gameInfo.selfPlayer.score }}</span></div>
+            <div class="mx-4">筹码：<span class="text-xl font-bold text-orange-600">{{selfPlayer.money }}</span></div>
+            <div class="mx-4">分数：<span class="text-xl font-bold text-orange-600">{{selfPlayer.score }}</span></div>
           </div>
           <div id="selfPlayerEleId" class="card-list pb-10 mx-auto overflow-x-auto relative"
-               :style="{width: gameInfo.totalWidth + 'px'}">
-            <div v-for="(card, index) in gameInfo.cards" :key="index" class="card small-card"
+               :style="{width: selfPlayer.totalWidth + 'px'}">
+            <div v-for="(card, index) in selfPlayer.cards" :key="index" class="card small-card"
                  :class="['card-' + card.number, {active: card.up}]"
                  :style="{left: card.left + 'px', top: '-30px'}"></div>
           </div>
@@ -118,7 +118,6 @@
 </template>
 
 <script>
-import {activeRangeCard, calcHandCardPosition, calcPlayerCardPosition, calcScore} from "@/utils";
 import {act} from "@/reactivity/playAction";
 import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {initRoom} from "@/http/room";
@@ -126,9 +125,10 @@ import {AnimationConfig, RoomStatus} from "../../shared/constants";
 import router from "@/router";
 import {joinRoomSocket} from "@/socket";
 import {showDialog} from "@/reactivity/dialog";
-import {gameInfo, playerAction} from "@/reactivity/game";
+import {playerAction} from "@/reactivity/game";
 import {getSelfPlayerId} from "@/utils/token";
-import {game} from "@/utils/data";
+import {mapGetters} from "vuex";
+import store from "@/store";
 
 export default {
   name: "PlayRoom",
@@ -159,6 +159,9 @@ export default {
         });
       } else if (data.status === RoomStatus.Running || data.status === RoomStatus.End) {
         joinRoomSocket(roomNumber);
+        console.log(data);
+        store.commit('setPlayers', data.players);
+        store.commit('setGameInfo', data.gameInfo);
       } else {
         showDialog("房间不存在！");
       }
@@ -177,7 +180,7 @@ export default {
       const bRect = boardCardElement?.getBoundingClientRect();
 
       const playerElement = document.getElementById(playerId === this.selfPlayerID ? "selfPlayerEleId" : playerId);
-      const pRect = playerElement.getBoundingClientRect();
+      const pRect = playerElement?.getBoundingClientRect();
       if (!bRect || !pRect) return;
 
       let startLeft = 0;
@@ -213,7 +216,7 @@ export default {
         this.animationConfig.left = startLeft;
         this.animationConfig.top = startTop;
       }, AnimationConfig.animationTime);
-    }
+    },
   },
   watch: {
     playerAction: function (newValue) {
@@ -224,62 +227,12 @@ export default {
     Action() {
       return Action
     },
-    game() {
-      return game
-    },
-    gameInfo() {
-      let game = gameInfo.value;
-      const lPlayers = [];
-      const rPlayers = [];
-      let selfPlayer = {};
-      let cards = [];
-      let totalWidth = 0;
-      let index = 0;
-      const boardCard = game.gameInfo.boardCard;
-
-      for (let i = 0; i < game.players.length; i++) {
-        let player = game.players[i];
-        if (this.selfPlayerID === player.id) {
-          let handCards = calcHandCardPosition(player.cards);
-          selfPlayer.score = calcScore(player.cards);
-          selfPlayer.money = player.money;
-          selfPlayer.avatar = player.avatar;
-          cards = handCards.cards;
-          totalWidth = handCards.totalWidth;
-          activeRangeCard(cards, boardCard);
-          continue;
-        }
-        let playersCards = calcPlayerCardPosition(player.cards);
-        const itemPlayer = {};
-        itemPlayer.money = player.money;
-        itemPlayer.id = player.id;
-        itemPlayer.avatar = player.avatar;
-        itemPlayer.score = calcScore(player.cards);
-        itemPlayer.cards = playersCards.cards;
-        itemPlayer.cardsTop = -playersCards.totalHeight / 4;
-        itemPlayer.cardsLeft = -playersCards.totalWidth;
-        activeRangeCard(itemPlayer.cards, boardCard);
-        if (index % 2 === 0) {
-          lPlayers.push(itemPlayer);
-        } else {
-          rPlayers.push(itemPlayer);
-        }
-        index++;
-      }
-      return {
-        boardCard: boardCard || 0,
-        creatorId: game.gameInfo.creatorId || '',
-        currentPlayerId: game.gameInfo.currentPlayerId || '#',
-        money: game.gameInfo.money || 0,
-        leftCardNumber: game.gameInfo.leftCardNumber || 0,
-        isFinished: game.gameInfo.isFinished,
-        lPlayers: lPlayers || [],
-        rPlayers: rPlayers || [],
-        selfPlayer: selfPlayer || {},
-        cards: cards || [],
-        totalWidth: totalWidth || 0,
-      }
-    }
+    ...mapGetters([
+        'selfPlayer',
+        'lPlayers',
+        'rPlayers',
+        'gameInfo',
+    ])
   }
 }
 </script>
