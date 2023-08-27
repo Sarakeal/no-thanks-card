@@ -28,12 +28,12 @@ export function getRand(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const tightLeftOffset = 3;
+const tightLeftOffset = 20;
 const space = 54;
 const cardWidth = 121;
 const scaleRate = 0.4;
 const smallCardWidth = cardWidth * scaleRate;
-const groupPreLineLimit = 7;
+const groupPreLineLimit = 4;
 const topOffset = 90;
 
 export function generateCards() {
@@ -64,7 +64,7 @@ export function calcHandCardPosition(cards: number[]) {
       number: cards[i],
       left: totalLeftOffset,
     });
-    for (let k = i + 1; k < j; k++) {
+    for (let k = i + 1; k <= j; k++) {
       // totalLeftOffset += k === i + 1 ? offset : tightLeftOffset;
       totalLeftOffset += tightLeftOffset;
       pCards.push({
@@ -86,6 +86,7 @@ export function calcPlayerCardPosition(cards: number[]) {
   let groupCount = 0;
   const baseLeftOffset = 0;
   let totalLeftOffset = baseLeftOffset;
+  let maxLeftOffset = 0;
   let totalTopOffset = -topOffset;
   for (let i = 0; i < cards.length; i++) {
     let j = i;
@@ -98,6 +99,7 @@ export function calcPlayerCardPosition(cards: number[]) {
     } else {
       if (i > 0) totalLeftOffset += space;
     }
+    maxLeftOffset = Math.max(maxLeftOffset, totalLeftOffset);
     groupCount++;
 
     pCards.push({
@@ -105,19 +107,21 @@ export function calcPlayerCardPosition(cards: number[]) {
       left: totalLeftOffset,
       top: totalTopOffset,
     });
-    for (let k = i + 1; k < j; k++) {
+    for (let k = i + 1; k <= j; k++) {
       totalLeftOffset += tightLeftOffset;
       pCards.push({
         number: cards[k],
         left: totalLeftOffset,
         top: totalTopOffset,
       });
+
+      maxLeftOffset = Math.max(maxLeftOffset, totalLeftOffset);
     }
     i = j;
   }
   return {
     cards: pCards,
-    totalWidth: totalLeftOffset + smallCardWidth,
+    totalWidth: maxLeftOffset + smallCardWidth,
     totalHeight: totalTopOffset,
   }
 }

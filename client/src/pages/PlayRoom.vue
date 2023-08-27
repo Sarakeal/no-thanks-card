@@ -72,7 +72,7 @@
               </div>
               <div>分数：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.score }}</span>
               </div>
-              <div class="player-card-list right" :style="{top: player.cardsTop + 'px'}">
+              <div class="player-card-list" :style="{top: player.cardsTop + 'px', left: player.cardsLeft + 'px'}">
                 <div v-for="(card, index) in player.cards" :key="index"
                      :style="{left: card.left + 'px', top: card.top + 'px'}"
                      :class="['card-' + card.number, {active: card.up}]"
@@ -238,7 +238,8 @@ export default {
         let playersCards = calcPlayerCardPosition(player.cards);
         player.score = calcScore(player.cards);
         player.cards = playersCards.cards;
-        player.cardsTop = -playersCards.totalHeight / 4 + 20;
+        player.cardsTop = -playersCards.totalHeight / 4;
+        player.cardsLeft = -playersCards.totalWidth;
         activeRangeCard(player.cards, boardCard);
         if (index % 2 === 0) {
           lPlayers.push(player);
@@ -286,7 +287,7 @@ export default {
 }
 
 .player-card-list {
-  transform: scale(0.6);
+  //transform: scale(0.6);
   position: absolute;
 }
 
@@ -294,9 +295,9 @@ export default {
   left: 130px;
 }
 
-.player-card-list.right {
-  left: -220px;
-}
+//.player-card-list.right {
+//  left: -220px;
+//}
 
 .card-list {
   height: 170px;
