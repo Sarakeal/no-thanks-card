@@ -29,18 +29,6 @@
             v-model="roomNumber"
         />
       </div>
-      <div class="flex text-2xl py-4 text-center">
-        <div class="flex-auto">
-          密码：
-        </div>
-        <input
-            class="px-4 border border-gray-400 bg-gray-100 rounded text-base hover:outline-none hover:border-indigo-600"
-            :maxlength="10"
-            type="text"
-            placeholder="请输入密码"
-            v-model="password"
-        />
-      </div>
       <div class="max-w-3xl mx-auto py-6 px-4">
         <button @click="join"
                 class="bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 focus:ring focus:ring-violet-300 rounded-md py-2 px-8 text-white font-semibold shadow-md">
@@ -64,7 +52,6 @@ export default {
     return {
       roomNumber: '',
       nickname: '',
-      password: ''
     }
   },
   methods: {
@@ -72,7 +59,6 @@ export default {
       const res = await joinRoom({
         name: this.nickname,
         roomNumber: this.roomNumber,
-        password: this.password
       })
 
       if (res && res.status === 200) {
@@ -86,7 +72,6 @@ export default {
         await router.push({
           name: "waitRoom",
           query: {
-            pw: this.password,
             number: this.roomNumber
           }
         });

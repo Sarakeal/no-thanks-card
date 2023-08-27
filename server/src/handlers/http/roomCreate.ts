@@ -8,11 +8,11 @@ import { Room } from "../../models/RoomModel";
 
 const roomCreate: Middleware = async (ctx, next) => {
   const req = ctx.request.body as CreateRoomRequest;
-  const { name, password } = req;
+  const { name } = req;
 
   const creator = new Player(name, 0);
 
-  const room = new Room({creator, password});
+  const room = new Room(creator);
 
   const res: CreateRoomResponse = {
     status: 200,

@@ -145,6 +145,25 @@ export default {
       playerAction: playerAction,
     }
   },
+  async created() {
+    let roomNumber = this.$route.query['number'];
+    const res = await initRoom({roomNumber: roomNumber})
+    if (res && res.status === 200) {
+      const data = res.data;
+      if (data.status === RoomStatus.Waiting) {
+        await router.push({
+          name: "waitRoom",
+          query: {
+            number: roomNumber
+          }
+        });
+      } else if (data.status === RoomStatus.Running || data.status === RoomStatus.End) {
+        joinRoomSocket(roomNumber);
+      } else {
+        showDialog("房间不存在！");
+      }
+    }
+  },
   methods: {
     async accept() {
       await act(Action.ACCEPT);
@@ -194,27 +213,6 @@ export default {
         this.animationConfig.left = startLeft;
         this.animationConfig.top = startTop;
       }, AnimationConfig.animationTime);
-    }
-  },
-  async created() {
-    let roomNumber = this.$route.query['number'];
-    let password = this.$route.query['pw'];
-    const res = await initRoom({roomNumber: roomNumber})
-    if (res && res.status === 200) {
-      const data = res.data;
-      if (data.status === RoomStatus.Waiting) {
-        await router.push({
-          name: "waitRoom",
-          query: {
-            pw: password,
-            number: roomNumber
-          }
-        });
-      } else if (data.status === RoomStatus.Running || data.status === RoomStatus.End) {
-        joinRoomSocket(roomNumber);
-      } else {
-        showDialog("房间不存在！");
-      }
     }
   },
   watch: {

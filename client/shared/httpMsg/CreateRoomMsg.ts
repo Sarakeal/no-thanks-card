@@ -4,7 +4,6 @@ import { HttpRes } from "./_httpResTemplate";
 export interface CreateRoomRequest {
 
   name: string;
-  password: string;
 
 }
 

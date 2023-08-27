@@ -26,7 +26,6 @@ const gameBegin: Middleware = async (ctx) => {
   }
 
   io.to(roomNumber).emit(Events.GAME_BEGIN, {
-    pw: room.password,
     roomNumber: room.roomNumber,
   } as GameBeginMsg);
 

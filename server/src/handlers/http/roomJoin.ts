@@ -10,7 +10,7 @@ import {createError} from "../../middleware/errorHandler";
 const PLAYER_LIMIT = 6;
 const roomInit: Middleware = async (ctx, next) => {
   const req = ctx.request.body as JoinRoomRequest;
-  const {name, roomNumber, password} = req;
+  const {name, roomNumber} = req;
 
   const room = Room.getRoom(roomNumber);
 
@@ -21,7 +21,7 @@ const roomInit: Middleware = async (ctx, next) => {
     })
   }
 
-  const player = room.joinPlayer(name, password);
+  const player = room.joinPlayer(name);
 
   const res: JoinRoomResponse = {
     status: 200,

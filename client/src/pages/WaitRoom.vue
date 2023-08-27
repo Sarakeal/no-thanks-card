@@ -54,7 +54,6 @@ export default {
   },
   async created() {
     let roomNumber = this.$route.query['number'];
-    let password = this.$route.query['pw'];
     const res = await initRoom({roomNumber: roomNumber})
     if (res && res.status === 200) {
       const data = res.data;
@@ -67,7 +66,6 @@ export default {
         await router.push({
           name: "playRoom",
           query: {
-            pw: password,
             number: roomNumber
           }
         });

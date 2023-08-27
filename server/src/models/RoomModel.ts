@@ -34,8 +34,6 @@ export class Room implements RoomDef {
 
   currentPlayer: Player;
 
-  password: string;
-
   timer: NodeJS.Timeout;
 
   cards: Cards;
@@ -50,13 +48,7 @@ export class Room implements RoomDef {
 
   private static roomMap: Record<string, Room> = {};
 
-  constructor({
-                creator,
-                password,
-              }: {
-    creator: Player;
-    password?: string;
-  }) {
+  constructor(creator: Player) {
     this.roomNumber = this.generateRoomNumber();
     Room.roomMap[this.roomNumber] = this;
 
@@ -64,8 +56,6 @@ export class Room implements RoomDef {
 
     this.creatorID = creator.id;
     creator.avatar = this.avatarList[0];
-
-    this.password = password;
 
     this.players = [creator];
     this.currentPlayer = creator;
@@ -121,11 +111,7 @@ export class Room implements RoomDef {
     return player;
   }
 
-  joinPlayer(name: string, password: string): PlayerDef {
-    if (this.password && this.password !== password) {
-      return createError({status: 401, msg: "密码错误"});
-    }
-
+  joinPlayer(name: string): PlayerDef {
     const index = this.players.length;
 
     const player = new Player(name, index);

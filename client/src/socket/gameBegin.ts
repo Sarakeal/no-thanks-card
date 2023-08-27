@@ -6,7 +6,6 @@ export default function gameBegin(msg: GameBeginMsg) {
     router.push({
       name: "playRoom",
       query: {
-        pw: msg.pw,
         number: msg.roomNumber,
       }
     });
