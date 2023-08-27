@@ -39,3 +39,7 @@ export enum AvatarType {
   Unicorn = 'unicorn',
 }
 
+export const AnimationConfig = {
+  frameNumber: 60,
+  animationTime: 1000, // unit: ms
+}

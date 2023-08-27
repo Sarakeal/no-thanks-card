@@ -121,7 +121,7 @@ import {activeRangeCard, calcHandCardPosition, calcPlayerCardPosition, calcScore
 import {act} from "@/reactivity/playAction";
 import {Action} from "../../shared/httpMsg/PlayerActMsg";
 import {initRoom} from "@/http/room";
-import {RoomStatus} from "../../shared/constants";
+import {AnimationConfig, RoomStatus} from "../../shared/constants";
 import router from "@/router";
 import {joinRoomSocket} from "@/socket";
 import {showDialog} from "@/reactivity/dialog";
@@ -168,18 +168,20 @@ export default {
       const desLeft = dRect.left;
       const desTop = dRect.top;
       let index = 0;
+      const totalFrameNumber = AnimationConfig.frameNumber * AnimationConfig.animationTime / 1000;
+
       const timer = setInterval(() => {
         this.isAnimation = true;
-        this.animationConfig.left = (desLeft - startLeft) / 60 * index + startLeft;
-        this.animationConfig.top = (desTop - startTop) / 60 * index + startTop;
+        this.animationConfig.left = (desLeft - startLeft) / totalFrameNumber * index + startLeft;
+        this.animationConfig.top = (desTop - startTop) / totalFrameNumber * index + startTop;
         index++;
-      }, 1000 / 60);
+      }, 1000 / AnimationConfig.frameNumber);
       setTimeout(() => {
         clearInterval(timer);
         this.isAnimation = false;
         this.animationConfig.left = startLeft;
         this.animationConfig.top = startTop;
-      }, 1000);
+      }, AnimationConfig.animationTime);
     }
   },
   async created() {
