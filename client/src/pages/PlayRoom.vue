@@ -111,7 +111,9 @@
         </div>
       </div>
     </div>
-    <div v-if="isAnimation" id="waitingMoveBoardCard" class="card z-40" :class="'card-' + movedCard"
+    <div v-if="actionType === Action.ACCEPT" class="card z-40" :class="'card-' + movedCard"
+         :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
+    <div v-if="actionType === Action.REJECT" class="w-16 h-16 absolute rounded-full bg-red-600 border-4"
          :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
   </div>
 </template>
@@ -135,7 +137,7 @@ export default {
   data() {
     return {
       selfPlayerID: getSelfPlayerId(),
-      isAnimation: false,
+      actionType: null,
       animationConfig: {
         left: 0,
         top: 0,
@@ -151,34 +153,45 @@ export default {
     async reject() {
       await act(Action.REJECT);
     },
-    animate(playerId, movedCard) {
-      this.movedCard = movedCard;
+    animate(actionType, playerId, movedCard) {
+
+      const boardCardElement = document.getElementById("boardCard");
+      const bRect = boardCardElement?.getBoundingClientRect();
+
+      const playerElement = document.getElementById(playerId);
+      const pRect = playerElement.getBoundingClientRect();
+      if (!bRect || !pRect) return;
+
       let startLeft = 0;
       let startTop = 0;
-      const sourceElement = document.getElementById("boardCard");
-      const sRect = sourceElement?.getBoundingClientRect();
-      if (sRect) {
-        startLeft = sRect.left;
-        startTop = sRect.top;
+      let desLeft = 0;
+      let desTop = 0;
+
+      if (actionType === Action.ACCEPT) {
+        this.movedCard = movedCard;
+        startLeft = bRect.left;
+        startTop = bRect.top;
+        desLeft = pRect.left;
+        desTop = pRect.top;
+      } else {
+        startLeft = pRect.left;
+        startTop = pRect.top;
+        desLeft = bRect.left;
+        desTop = bRect.top;
       }
 
-      const desElement = document.getElementById(playerId);
-      const dRect = desElement.getBoundingClientRect();
-
-      const desLeft = dRect.left;
-      const desTop = dRect.top;
       let index = 0;
       const totalFrameNumber = AnimationConfig.frameNumber * AnimationConfig.animationTime / 1000;
 
       const timer = setInterval(() => {
-        this.isAnimation = true;
+        this.actionType = actionType;
         this.animationConfig.left = (desLeft - startLeft) / totalFrameNumber * index + startLeft;
         this.animationConfig.top = (desTop - startTop) / totalFrameNumber * index + startTop;
         index++;
       }, 1000 / AnimationConfig.frameNumber);
       setTimeout(() => {
         clearInterval(timer);
-        this.isAnimation = false;
+        this.actionType = null;
         this.animationConfig.left = startLeft;
         this.animationConfig.top = startTop;
       }, AnimationConfig.animationTime);
@@ -207,12 +220,15 @@ export default {
   },
   watch: {
     playerAction: function (newValue) {
-      if (newValue.type === Action.ACCEPT && newValue.playerId !== this.selfPlayerID) {
-        this.animate(newValue.playerId, newValue.movedCard);
+      if (newValue.playerId !== this.selfPlayerID) {
+        this.animate(newValue.type, newValue.playerId, newValue.movedCard);
       }
     }
   },
   computed: {
+    Action() {
+      return Action
+    },
     game() {
       return game
     },
