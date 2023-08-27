@@ -8,7 +8,7 @@ export interface PlayerActRequest {
 
 
 export enum Action {
-  ACCEPT = 1,
+  ACCEPT = 1, // 拿牌
 
   REJECT = 0,
 }

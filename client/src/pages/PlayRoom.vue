@@ -1,5 +1,5 @@
 <template>
-  <div id="root">
+  <div id="root" class="relative">
     <div class="select-none flex flex-col min-h-screen">
       <div class="flex-grow flex flex-col">
         <div class="pt-2 flex items-center justify-center">
@@ -7,14 +7,17 @@
         </div>
         <div class="flex items-center justify-center text-l mt-4">
           <div class="mx-4">桌上筹码：<span class="text-xl font-bold text-orange-600">{{ gameInfo.money }}</span></div>
-          <div class="mx-4">剩余卡牌：<span class="text-xl font-bold text-orange-600">{{ gameInfo.leftCardNumber }}</span></div>
+          <div class="mx-4">剩余卡牌：<span class="text-xl font-bold text-orange-600">{{
+              gameInfo.leftCardNumber
+            }}</span></div>
         </div>
         <div class="flex-grow flex justify-around mt-10">
           <div class="w-36 flex flex-col">
             <div v-for="(player, index) in gameInfo.lPlayers" :key="index"
                  class="flex flex-col items-center justify-center mb-24 relative text-xs">
               <div class="border-2 rounded-full relative">
-                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"/>
+                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)" :ref="player.id"
+                     :id="player.id"/>
                 <div
                     :class="'bg-color-' + player.index"
                     class="player-index-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm">
@@ -31,8 +34,10 @@
                 </div>
               </div>
               <div class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.name }}</div>
-              <div>筹码：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.money }}</span></div>
-              <div>分数：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.score }}</span></div>
+              <div>筹码：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.money }}</span>
+              </div>
+              <div>分数：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.score }}</span>
+              </div>
               <div class="player-card-list left" :style="{top: player.cardsTop + 'px'}">
                 <div v-for="(card, index) in player.cards" :key="index"
                      :style="{left: card.left + 'px', top: card.top + 'px'}"
@@ -45,7 +50,8 @@
             <div v-for="(player, index) in gameInfo.rPlayers" :key="index"
                  class="flex flex-col items-center justify-center mb-24 relative text-xs">
               <div class="border-2 rounded-full relative">
-                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"/>
+                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)" :ref="player.index"
+                     :id="player.id"/>
                 <div
                     :class="'bg-color-' + player.index"
                     class="player-index-tag absolute whitespace-nowrap px-2 translate-x-[-50%] rounded-full text-white text-sm">
@@ -62,8 +68,10 @@
                 </div>
               </div>
               <div class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.name }}</div>
-              <div>筹码：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.money }}</span></div>
-              <div>分数：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.score }}</span></div>
+              <div>筹码：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.money }}</span>
+              </div>
+              <div>分数：<span class="text-xl font-bold" :class="'text-color-' + player.index">{{ player.score }}</span>
+              </div>
               <div class="player-card-list right" :style="{top: player.cardsTop + 'px'}">
                 <div v-for="(card, index) in player.cards" :key="index"
                      :style="{left: card.left + 'px', top: card.top + 'px'}"
@@ -72,8 +80,8 @@
               </div>
             </div>
           </div>
-          <div class="absolute top-1/2 board-card card-reverse color-3">
-            <div class="card" :class="'card-' + gameInfo.boardCard"></div>
+          <div class="absolute top-1/2 board-card card-reverse color-3" ref="boardCard">
+            <div id="boardCard" class="card" :class="'card-' + gameInfo.boardCard"></div>
           </div>
         </div>
         <div>
@@ -90,8 +98,8 @@
                 No thanks!
               </button>
             </div>
-            <div class="mx-4">筹码：<span class="text-xl font-bold text-orange-600">{{ gameInfo.selfPlayer.money }}</span></div>
-            <div class="mx-4">分数：<span class="text-xl font-bold text-orange-600">{{ gameInfo.selfPlayer.score }}</span></div>
+            <div class="mx-4">筹码：<span class="text-xl font-bold text-orange-600">{{gameInfo.selfPlayer.money }}</span></div>
+            <div class="mx-4">分数：<span class="text-xl font-bold text-orange-600">{{gameInfo.selfPlayer.score }}</span></div>
           </div>
           <div class="card-list pb-10 mx-auto overflow-x-auto relative"
                :style="{width: gameInfo.totalWidth + 'px'}">
@@ -103,6 +111,8 @@
         </div>
       </div>
     </div>
+    <div v-if="isAnimation" id="waitingMoveBoardCard" class="card relative z-40" :class="'card-' + movedCardNumber"
+         :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
   </div>
 </template>
 
@@ -115,7 +125,7 @@ import {RoomStatus} from "../../shared/constants";
 import router from "@/router";
 import {joinRoomSocket} from "@/socket";
 import {showDialog} from "@/reactivity/dialog";
-import {gameInfo} from "@/reactivity/game";
+import {gameInfo, playerAction} from "@/reactivity/game";
 import {getSelfPlayerId} from "@/utils/token";
 
 export default {
@@ -124,6 +134,13 @@ export default {
   data() {
     return {
       selfPlayerID: getSelfPlayerId(),
+      isAnimation: false,
+      animationConfig: {
+        left: 0,
+        top: 0,
+      },
+      movedCardNumber: 0,
+      playerAction: playerAction,
     }
   },
   methods: {
@@ -132,6 +149,39 @@ export default {
     },
     async reject() {
       await act(Action.REJECT);
+    },
+    animate(playerId, movedCardNumber) {
+      this.isAnimation = true;
+
+      this.movedCardNumber = movedCardNumber;
+      let startLeft = 0;
+      let startTop = 0;
+      const sourceElement = document.getElementById("boardCard");
+      const sRect = sourceElement?.getBoundingClientRect();
+      if (sRect) {
+        console.log(sRect.top, sRect.left, sRect.right, sRect.bottom);
+        startLeft = sRect.left;
+        startTop = sRect.top;
+      }
+
+      const desElement = document.getElementById(playerId);
+      const dRect = desElement.getBoundingClientRect();
+
+      const desLeft = dRect.left;
+      const desTop = dRect.top;
+      let index = 0;
+      const timer = setInterval(() => {
+
+        this.animationConfig.left = (desLeft - startLeft) / 60 * index + startLeft;
+        this.animationConfig.top = (desTop - startTop) / 60 * index + startTop;
+        index++;
+      }, 1000 / 60);
+      setTimeout(() => {
+        clearInterval(timer);
+        this.isAnimation = false;
+        this.animationConfig.left = startLeft;
+        this.animationConfig.top = startTop;
+      }, 1000);
     }
   },
   async created() {
@@ -153,6 +203,14 @@ export default {
       } else {
         showDialog("房间不存在！");
       }
+    }
+  },
+  watch: {
+    playerAction: function (newValue) {
+      if (newValue.type === Action.ACCEPT) {
+        this.animate(newValue.playerId, newValue.movedCardNumber);
+      }
+      console.log(newValue);
     }
   },
   computed: {
@@ -247,6 +305,7 @@ export default {
   top: 80px;
   z-index: 20;
 }
+
 .room-host-tag {
   left: 10px;
   top: -10px;
@@ -406,27 +465,35 @@ export default {
     top: -30px;
   }
 }
+
 .bg-color-0 {
   background-color: #E43E16;
 }
+
 .bg-color-1 {
   background-color: #F47406;
 }
+
 .bg-color-2 {
   background-color: #F5A705;
 }
+
 .bg-color-3 {
   background-color: #DD7126;
 }
+
 .bg-color-4 {
   background-color: #7BCD23;
 }
+
 .bg-color-5 {
   background-color: #057161;
 }
+
 .bg-color-6 {
   background-color: #253292;
 }
+
 .bg-color-7 {
   background-color: #701769;
 }
@@ -434,24 +501,31 @@ export default {
 .text-color-0 {
   color: #E43E16;
 }
+
 .text-color-1 {
   color: #F47406;
 }
+
 .text-color-2 {
   color: #F5A705;
 }
+
 .text-color-3 {
   color: #DD7126;
 }
+
 .text-color-4 {
   color: #7BCD23;
 }
+
 .text-color-5 {
   color: #057161;
 }
+
 .text-color-6 {
   color: #253292;
 }
+
 .text-color-7 {
   color: #701769;
 }

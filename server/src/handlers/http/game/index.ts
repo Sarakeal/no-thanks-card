@@ -4,6 +4,7 @@ import {Events} from "../../../../../client/shared/WSEvents";
 import {RoomStatus} from "../../../../../client/shared/constants";
 import {Action} from "../../../../../client/shared/httpMsg/PlayerActMsg";
 import {ChangeStatusMsg} from "../../../../../client/shared/wsMsg/ChangeStatus";
+import {ActionMsg} from "../../../../../client/shared/wsMsg/Action";
 import {GameEndMsg} from "../../../../../client/shared/wsMsg/GameEnd";
 import {Player} from "../../../models/PlayerModel";
 import {calcScore, shuffle} from "../../../util";
@@ -40,6 +41,12 @@ export const GameHandler: IGameHandler = {
     action: Action,
   ) {
     if (action === Action.ACCEPT) {
+      io.to(room.roomNumber).emit(Events.ACTION, {
+        type: Action.ACCEPT,
+        movedCard: room.cards.currentCard,
+        playerId: player.id,
+      } as ActionMsg);
+
       player.cards.push(room.cards.currentCard);
       room.cards.next();
       player.money += room.dealerMoney;
@@ -49,8 +56,19 @@ export const GameHandler: IGameHandler = {
         player.money--;
         room.dealerMoney++;
         room.currentPlayer = room.getNextPlayer();
+
+        io.to(room.roomNumber).emit(Events.ACTION, {
+          type: Action.REJECT,
+          playerId: player.id,
+        } as ActionMsg);
       } else {
         // 没钱只能接受
+        io.to(room.roomNumber).emit(Events.ACTION, {
+          type: Action.ACCEPT,
+          movedCard: room.cards.currentCard,
+          playerId: player.id,
+        } as ActionMsg);
+
         player.cards.push(room.cards.currentCard);
         player.money += room.dealerMoney;
         room.dealerMoney = 0;
@@ -79,8 +97,19 @@ export const GameHandler: IGameHandler = {
         room.currentPlayer.money--;
         room.dealerMoney++;
         room.currentPlayer = room.getNextPlayer();
+
+        io.to(room.roomNumber).emit(Events.ACTION, {
+          type: Action.REJECT,
+          playerId: room.currentPlayer.id,
+        } as ActionMsg);
       } else {
         // 没钱只能拿牌
+        io.to(room.roomNumber).emit(Events.ACTION, {
+          type: Action.ACCEPT,
+          movedCard: room.cards.currentCard,
+          playerId: room.currentPlayer.id,
+        } as ActionMsg);
+
         room.currentPlayer.money += room.dealerMoney;
         room.dealerMoney = 0;
         room.currentPlayer.cards.push(room.cards.currentCard);

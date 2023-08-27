@@ -5,6 +5,7 @@ import roomJoin from "@/socket/roomJoin";
 import gameBegin from "@/socket/gameBegin";
 import gameEnd from "@/socket/gameEnd";
 import changeStatus from "@/socket/changeStatus";
+import playerActed from "@/socket/playerAction";
 
 let socket: any;
 
@@ -23,6 +24,7 @@ function joinRoomSocket(roomNumber: string) {
   socket.on(Events.GAME_BEGIN, gameBegin);
   socket.on(Events.GAME_END, gameEnd);
   socket.on(Events.CHANGE_STATUS, changeStatus);
+  socket.on(Events.ACTION, playerActed);
 
   socket.emit(Events.ROOM_JOIN, roomNumber);
 
