@@ -16,7 +16,7 @@
             <div v-for="(player, index) in gameInfo.lPlayers" :key="index"
                  class="flex flex-col items-center justify-center mb-24 relative text-xs">
               <div class="border-2 rounded-full relative">
-                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)" :ref="player.id"
+                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"
                      :id="player.id"/>
                 <div
                     :class="'bg-color-' + player.index"
@@ -50,7 +50,7 @@
             <div v-for="(player, index) in gameInfo.rPlayers" :key="index"
                  class="flex flex-col items-center justify-center mb-24 relative text-xs">
               <div class="border-2 rounded-full relative">
-                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)" :ref="player.index"
+                <img class="w-24 h-24" :src="require(`../assets/avatar/${player.avatar}.png`)"
                      :id="player.id"/>
                 <div
                     :class="'bg-color-' + player.index"
@@ -80,7 +80,7 @@
               </div>
             </div>
           </div>
-          <div v-show="!gameInfo.isFinished" class="absolute top-1/2 board-card card-reverse color-3" ref="boardCard">
+          <div v-show="!gameInfo.isFinished" class="absolute top-1/2 board-card card-reverse color-3">
             <div id="boardCard" class="card" :class="'card-' + gameInfo.boardCard"></div>
           </div>
         </div>
@@ -101,13 +101,12 @@
             <div class="mx-4">筹码：<span class="text-xl font-bold text-orange-600">{{gameInfo.selfPlayer.money }}</span></div>
             <div class="mx-4">分数：<span class="text-xl font-bold text-orange-600">{{gameInfo.selfPlayer.score }}</span></div>
           </div>
-          <div class="card-list pb-10 mx-auto overflow-x-auto relative"
+          <div id="selfPlayerEleId" class="card-list pb-10 mx-auto overflow-x-auto relative"
                :style="{width: gameInfo.totalWidth + 'px'}">
             <div v-for="(card, index) in gameInfo.cards" :key="index" class="card small-card"
                  :class="['card-' + card.number, {active: card.up}]"
                  :style="{left: card.left + 'px', top: '-30px'}"></div>
           </div>
-
         </div>
       </div>
     </div>
@@ -158,7 +157,7 @@ export default {
       const boardCardElement = document.getElementById("boardCard");
       const bRect = boardCardElement?.getBoundingClientRect();
 
-      const playerElement = document.getElementById(playerId);
+      const playerElement = document.getElementById(playerId === this.selfPlayerID ? "selfPlayerEleId" : playerId);
       const pRect = playerElement.getBoundingClientRect();
       if (!bRect || !pRect) return;
 
@@ -172,7 +171,7 @@ export default {
         startLeft = bRect.left;
         startTop = bRect.top;
         desLeft = pRect.left;
-        desTop = pRect.top;
+        desTop = playerId === this.selfPlayerID ? pRect.top - 100 : pRect.top;
       } else {
         startLeft = pRect.left;
         startTop = pRect.top;
@@ -220,9 +219,7 @@ export default {
   },
   watch: {
     playerAction: function (newValue) {
-      if (newValue.playerId !== this.selfPlayerID) {
-        this.animate(newValue.type, newValue.playerId, newValue.movedCard);
-      }
+      this.animate(newValue.type, newValue.playerId, newValue.movedCard);
     }
   },
   computed: {
