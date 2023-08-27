@@ -97,14 +97,14 @@ export const GameHandler: IGameHandler = {
       room.timer = setTimeout(() => {
         // 此时是超时未操作的，默认不拿
         if (room.currentPlayer.money > 0) {
-          room.currentPlayer.money--;
-          room.dealerMoney++;
-          room.currentPlayer = room.getNextPlayer();
-
           io.to(room.roomNumber).emit(Events.ACTION, {
             type: Action.REJECT,
             playerId: room.currentPlayer.id,
           } as ActionMsg);
+
+          room.currentPlayer.money--;
+          room.dealerMoney++;
+          room.currentPlayer = room.getNextPlayer();
         } else {
           // 没钱只能拿牌
           io.to(room.roomNumber).emit(Events.ACTION, {
