@@ -112,7 +112,7 @@
     </div>
     <div v-if="actionType === Action.ACCEPT" class="card z-40" :class="'card-' + movedCard"
          :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
-    <div v-if="actionType === Action.REJECT" class="w-16 h-16 absolute rounded-full bg-red-600 border-4"
+    <div v-if="actionType === Action.REJECT" class="w-16 h-16 absolute rounded-full bg-red-600 border-4 z-40"
          :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
   </div>
 </template>
@@ -241,23 +241,28 @@ export default {
         let player = game.players[i];
         if (this.selfPlayerID === player.id) {
           let handCards = calcHandCardPosition(player.cards);
-          player.score = calcScore(player.cards);
+          selfPlayer.score = calcScore(player.cards);
+          selfPlayer.money = player.money;
+          selfPlayer.avatar = player.avatar;
           cards = handCards.cards;
           totalWidth = handCards.totalWidth;
           activeRangeCard(cards, boardCard);
-          selfPlayer = player;
           continue;
         }
         let playersCards = calcPlayerCardPosition(player.cards);
-        player.score = calcScore(player.cards);
-        player.cards = playersCards.cards;
-        player.cardsTop = -playersCards.totalHeight / 4;
-        player.cardsLeft = -playersCards.totalWidth;
-        activeRangeCard(player.cards, boardCard);
+        const itemPlayer = {};
+        itemPlayer.money = player.money;
+        itemPlayer.id = player.id;
+        itemPlayer.avatar = player.avatar;
+        itemPlayer.score = calcScore(player.cards);
+        itemPlayer.cards = playersCards.cards;
+        itemPlayer.cardsTop = -playersCards.totalHeight / 4;
+        itemPlayer.cardsLeft = -playersCards.totalWidth;
+        activeRangeCard(itemPlayer.cards, boardCard);
         if (index % 2 === 0) {
-          lPlayers.push(player);
+          lPlayers.push(itemPlayer);
         } else {
-          rPlayers.push(player);
+          rPlayers.push(itemPlayer);
         }
         index++;
       }
