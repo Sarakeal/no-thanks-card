@@ -75,7 +75,11 @@ export const GameHandler: IGameHandler = {
         room.cards.next();
       }
     }
-    this.start(room);
+    if (room.cards.isFinished()) {
+      this.end(room);
+    } else {
+      this.start(room);
+    }
 
     return {
       status: 200,
@@ -85,39 +89,38 @@ export const GameHandler: IGameHandler = {
   },
 
   start(room: Room) {
-    if (room.cards.isFinished()) {
-      this.end(room);
-    }
 
     const timeout = 10;
     clearTimeout(room.timer);
-    room.timer = setTimeout(() => {
-      // 此时是超时未操作的，默认不拿
-      if (room.currentPlayer.money > 0) {
-        room.currentPlayer.money--;
-        room.dealerMoney++;
-        room.currentPlayer = room.getNextPlayer();
 
-        io.to(room.roomNumber).emit(Events.ACTION, {
-          type: Action.REJECT,
-          playerId: room.currentPlayer.id,
-        } as ActionMsg);
-      } else {
-        // 没钱只能拿牌
-        io.to(room.roomNumber).emit(Events.ACTION, {
-          type: Action.ACCEPT,
-          movedCard: room.cards.currentCard,
-          playerId: room.currentPlayer.id,
-        } as ActionMsg);
+    if (!room.cards.isFinished()) {
+      room.timer = setTimeout(() => {
+        // 此时是超时未操作的，默认不拿
+        if (room.currentPlayer.money > 0) {
+          room.currentPlayer.money--;
+          room.dealerMoney++;
+          room.currentPlayer = room.getNextPlayer();
 
-        room.currentPlayer.money += room.dealerMoney;
-        room.dealerMoney = 0;
-        room.currentPlayer.cards.push(room.cards.currentCard);
-        room.cards.next();
-      }
+          io.to(room.roomNumber).emit(Events.ACTION, {
+            type: Action.REJECT,
+            playerId: room.currentPlayer.id,
+          } as ActionMsg);
+        } else {
+          // 没钱只能拿牌
+          io.to(room.roomNumber).emit(Events.ACTION, {
+            type: Action.ACCEPT,
+            movedCard: room.cards.currentCard,
+            playerId: room.currentPlayer.id,
+          } as ActionMsg);
 
-      this.start(room);
-    }, (timeout + 1) * 1000);
+          room.currentPlayer.money += room.dealerMoney;
+          room.dealerMoney = 0;
+          room.currentPlayer.cards.push(room.cards.currentCard);
+          room.cards.next();
+        }
+        this.start(room);
+      }, timeout * 1000);
+    }
 
     io.to(room.roomNumber).emit(Events.CHANGE_STATUS, {
       players: room.getPlayers(),
@@ -127,8 +130,13 @@ export const GameHandler: IGameHandler = {
         leftCardNumber: room.cards.left,
         creatorId: room.creatorID,
         currentPlayerId: room.currentPlayer.id,
+        isFinished: room.cards.isFinished(),
       }
     } as ChangeStatusMsg);
+
+    if (room.cards.isFinished()) {
+      this.end(room);
+    }
   },
 
   end(room: Room) {
@@ -180,23 +188,19 @@ export class Cards {
       this.cards.push(i);
     }
     shuffle(this.cards);
-    this.cards.push(0); // 填充0作为结束标志
     this.currentCard = this.cards[this.index];
     this.left = Cards.max - Cards.min + 1 - 5;
   }
 
   next() {
-    this.index++;
+    if (this.isFinished()) return;
+    this.currentCard = this.cards[this.index];
     this.left--;
-    const card = this.cards[this.index];
-
-    this.currentCard = card;
-    return card;
+    this.index++;
   }
 
   isFinished() {
-    return this.index === this.cards.length;
+    return this.index >= this.cards.length;
   }
-
 }
 

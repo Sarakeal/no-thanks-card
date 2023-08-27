@@ -80,7 +80,7 @@
               </div>
             </div>
           </div>
-          <div class="absolute top-1/2 board-card card-reverse color-3" ref="boardCard">
+          <div v-show="!gameInfo.isFinished" class="absolute top-1/2 board-card card-reverse color-3" ref="boardCard">
             <div id="boardCard" class="card" :class="'card-' + gameInfo.boardCard"></div>
           </div>
         </div>
@@ -127,6 +127,7 @@ import {joinRoomSocket} from "@/socket";
 import {showDialog} from "@/reactivity/dialog";
 import {gameInfo, playerAction} from "@/reactivity/game";
 import {getSelfPlayerId} from "@/utils/token";
+import {game} from "@/utils/data";
 
 export default {
   name: "PlayRoom",
@@ -151,8 +152,6 @@ export default {
       await act(Action.REJECT);
     },
     animate(playerId, movedCard) {
-      this.isAnimation = true;
-
       this.movedCard = movedCard;
       let startLeft = 0;
       let startTop = 0;
@@ -170,7 +169,7 @@ export default {
       const desTop = dRect.top;
       let index = 0;
       const timer = setInterval(() => {
-
+        this.isAnimation = true;
         this.animationConfig.left = (desLeft - startLeft) / 60 * index + startLeft;
         this.animationConfig.top = (desTop - startTop) / 60 * index + startTop;
         index++;
@@ -212,6 +211,9 @@ export default {
     }
   },
   computed: {
+    game() {
+      return game
+    },
     gameInfo() {
       let game = gameInfo.value;
       const lPlayers = [];
@@ -246,16 +248,17 @@ export default {
         index++;
       }
       return {
-        boardCard: boardCard,
-        creatorId: game.gameInfo.creatorId,
-        currentPlayerId: game.gameInfo.currentPlayerId,
-        money: game.gameInfo.money,
-        leftCardNumber: game.gameInfo.leftCardNumber,
-        lPlayers: lPlayers,
-        rPlayers: rPlayers,
-        selfPlayer: selfPlayer,
-        cards: cards,
-        totalWidth: totalWidth,
+        boardCard: boardCard || 0,
+        creatorId: game.gameInfo.creatorId || '',
+        currentPlayerId: game.gameInfo.currentPlayerId || '#',
+        money: game.gameInfo.money || 0,
+        leftCardNumber: game.gameInfo.leftCardNumber || 0,
+        isFinished: game.gameInfo.isFinished,
+        lPlayers: lPlayers || [],
+        rPlayers: rPlayers || [],
+        selfPlayer: selfPlayer || {},
+        cards: cards || [],
+        totalWidth: totalWidth || 0,
       }
     }
   }

@@ -29,9 +29,10 @@ export interface PlayerDef {
 
 export interface GameInfo {
 
-    boardCard: number,
-    money: number,
-    leftCardNumber: number,
-    creatorId: string,
-    currentPlayerId: string,
+  boardCard: number,
+  money: number,
+  leftCardNumber: number,
+  creatorId: string,
+  currentPlayerId: string,
+  isFinished: boolean,
 }
