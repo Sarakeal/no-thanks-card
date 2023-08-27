@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div v-if="isAnimation" id="waitingMoveBoardCard" class="card relative z-40" :class="'card-' + movedCardNumber"
+    <div v-if="isAnimation" id="waitingMoveBoardCard" class="card z-40" :class="'card-' + movedCard"
          :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
   </div>
 </template>
@@ -139,7 +139,7 @@ export default {
         left: 0,
         top: 0,
       },
-      movedCardNumber: 0,
+      movedCard: 0,
       playerAction: playerAction,
     }
   },
@@ -150,16 +150,15 @@ export default {
     async reject() {
       await act(Action.REJECT);
     },
-    animate(playerId, movedCardNumber) {
+    animate(playerId, movedCard) {
       this.isAnimation = true;
 
-      this.movedCardNumber = movedCardNumber;
+      this.movedCard = movedCard;
       let startLeft = 0;
       let startTop = 0;
       const sourceElement = document.getElementById("boardCard");
       const sRect = sourceElement?.getBoundingClientRect();
       if (sRect) {
-        console.log(sRect.top, sRect.left, sRect.right, sRect.bottom);
         startLeft = sRect.left;
         startTop = sRect.top;
       }
@@ -207,10 +206,9 @@ export default {
   },
   watch: {
     playerAction: function (newValue) {
-      if (newValue.type === Action.ACCEPT) {
-        this.animate(newValue.playerId, newValue.movedCardNumber);
+      if (newValue.type === Action.ACCEPT && newValue.playerId !== this.selfPlayerID) {
+        this.animate(newValue.playerId, newValue.movedCard);
       }
-      console.log(newValue);
     }
   },
   computed: {
@@ -276,6 +274,7 @@ export default {
   height: 170px;
   position: absolute;
   border-radius: 11px;
+  background-position: -48px -67px;
 }
 
 .small-card {
