@@ -176,8 +176,8 @@ export default {
       } else {
         startLeft = pRect.left;
         startTop = pRect.top;
-        desLeft = bRect.left;
-        desTop = bRect.top;
+        desLeft = (bRect.left + bRect.right) / 2 - 32;  // 32是筹码的半径，这样让筹码移动到卡牌的中央
+        desTop = (bRect.top + bRect.bottom) / 2 - 32;
       }
 
       let index = 0;
