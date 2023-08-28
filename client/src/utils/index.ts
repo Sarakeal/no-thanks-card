@@ -49,25 +49,26 @@ export function generateCards() {
   return cards;
 }
 
-export function calcHandCardPosition(cards: number[]) {
+export function calcHandCardPosition(pCards: number[]) {
+  const cards = [...pCards];
   cards.sort((a, b) => a - b);
   // const offset = 26;
   let totalLeftOffset = 0;
-  const pCards = [];
+  const resCards = [];
   for (let i = 0; i < cards.length; i++) {
     let j = i;
     while (j + 1 < cards.length && cards[j + 1] === cards[j] + 1) {
       j++;
     }
     if (i > 0) totalLeftOffset += space;
-    pCards.push({
+    resCards.push({
       number: cards[i],
       left: totalLeftOffset,
     });
     for (let k = i + 1; k <= j; k++) {
       // totalLeftOffset += k === i + 1 ? offset : tightLeftOffset;
       totalLeftOffset += tightLeftOffset;
-      pCards.push({
+      resCards.push({
         number: cards[k],
         left: totalLeftOffset,
       });
@@ -75,14 +76,16 @@ export function calcHandCardPosition(cards: number[]) {
     i = j;
   }
   return {
-    cards: pCards,
+    cards: resCards,
     totalWidth: totalLeftOffset + smallCardWidth,
   }
 }
 
-export function calcPlayerCardPosition(cards: number[]) {
+export function calcPlayerCardPosition(pCards: number[]) {
+  const cards = [...pCards];
+
   cards.sort((a, b) => a - b);
-  const pCards = [];
+  const resCards = [];
   let groupCount = 0;
   const baseLeftOffset = 0;
   let totalLeftOffset = baseLeftOffset;
@@ -102,14 +105,14 @@ export function calcPlayerCardPosition(cards: number[]) {
     maxLeftOffset = Math.max(maxLeftOffset, totalLeftOffset);
     groupCount++;
 
-    pCards.push({
+    resCards.push({
       number: cards[i],
       left: totalLeftOffset,
       top: totalTopOffset,
     });
     for (let k = i + 1; k <= j; k++) {
       totalLeftOffset += tightLeftOffset;
-      pCards.push({
+      resCards.push({
         number: cards[k],
         left: totalLeftOffset,
         top: totalTopOffset,
@@ -120,7 +123,7 @@ export function calcPlayerCardPosition(cards: number[]) {
     i = j;
   }
   return {
-    cards: pCards,
+    cards: resCards,
     totalWidth: maxLeftOffset + smallCardWidth,
     totalHeight: totalTopOffset,
   }
