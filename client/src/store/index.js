@@ -32,6 +32,7 @@ const store = new Vuex.Store({
       if (player) {
         const handCards = calcHandCardPosition(player.cards);
         sPlayer.score = calcScore(player.cards);
+        sPlayer.index = player.index;
         sPlayer.money = player.money;
         sPlayer.avatar = player.avatar;
         sPlayer.cards = handCards.cards;
@@ -60,6 +61,7 @@ const store = new Vuex.Store({
             cardsLeft: 0,
           };
           itemPlayer.id = player.id;
+          itemPlayer.index = player.index;
           itemPlayer.money = player.money;
           itemPlayer.avatar = player.avatar;
           itemPlayer.score = calcScore(player.cards);
@@ -93,6 +95,7 @@ const store = new Vuex.Store({
             cardsLeft: 0,
           };
           itemPlayer.id = player.id;
+          itemPlayer.index = player.index;
           itemPlayer.money = player.money;
           itemPlayer.avatar = player.avatar;
           itemPlayer.score = calcScore(player.cards);
