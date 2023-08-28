@@ -2,7 +2,6 @@ import {calcHandCardPosition, calcPlayerCardPosition, calcScore} from "@/utils";
 import {AvatarType} from "../../shared/constants";
 import Vuex from 'vuex'
 import Vue from "vue";
-import {getSelfPlayerId} from "@/utils/token";
 
 Vue.use(Vuex);
 
@@ -17,10 +16,9 @@ const store = new Vuex.Store({
       leftCardNumber: 0,
       isFinished: 0,
     },
-    selfPlayerId: getSelfPlayerId(),
   },
   getters: {
-    selfPlayer (state) {
+    getSelfPlayer: (state) => (selfPlayerId) => {
       const sPlayer = {
         score: 0,
         money: 0,
@@ -28,87 +26,59 @@ const store = new Vuex.Store({
         cards: [],
         totalWidth: 0,
       };
-      const player = state.players.find(p => p.id === state.selfPlayerId)
+      const player = state.players.find(p => p.id === selfPlayerId)
       if (player) {
         const handCards = calcHandCardPosition(player.cards);
         sPlayer.score = calcScore(player.cards);
-        sPlayer.index = player.index;
         sPlayer.money = player.money;
+        sPlayer.index = player.index;
         sPlayer.avatar = player.avatar;
         sPlayer.cards = handCards.cards;
         sPlayer.totalWidth = handCards.totalWidth;
       }
-      // console.log(sPlayer);
       return sPlayer;
     },
-    lPlayers (state) {
+    getOtherPlayers: (state) => (selfPlayerId) => {
       const lPlayers = [];
-      let index = 0;
-      for (let i = 0; i < state.players.length; i++) {
-        const player = state.players[i];
-        if (state.selfPlayerID === player.id) {
-          continue;
-        }
-        if (index % 2 === 0) {
-          const playersCards = calcPlayerCardPosition(player.cards);
-          const itemPlayer = {
-            id: '#',
-            score: 0,
-            money: 0,
-            avatar: AvatarType.Clown,
-            cards: [],
-            cardsTop: 0,
-            cardsLeft: 0,
-          };
-          itemPlayer.id = player.id;
-          itemPlayer.index = player.index;
-          itemPlayer.money = player.money;
-          itemPlayer.avatar = player.avatar;
-          itemPlayer.score = calcScore(player.cards);
-          itemPlayer.cards = playersCards.cards;
-          itemPlayer.cardsTop = -playersCards.totalHeight / 4;
-          itemPlayer.cardsLeft = -playersCards.totalWidth;
-          lPlayers.push(itemPlayer);
-        }
-        index++;
-      }
-      return lPlayers;
-    },
-    rPlayers (state) {
       const rPlayers = [];
       let index = 0;
-
       for (let i = 0; i < state.players.length; i++) {
         const player = state.players[i];
-        if (state.selfPlayerID === player.id) {
+        if (selfPlayerId === player.id) {
           continue;
         }
-        if (index % 2 === 1) {
-          const playersCards = calcPlayerCardPosition(player.cards);
-          const itemPlayer = {
-            id: '#',
-            score: 0,
-            money: 0,
-            avatar: AvatarType.Clown,
-            cards: [],
-            cardsTop: 0,
-            cardsLeft: 0,
-          };
-          itemPlayer.id = player.id;
-          itemPlayer.index = player.index;
-          itemPlayer.money = player.money;
-          itemPlayer.avatar = player.avatar;
-          itemPlayer.score = calcScore(player.cards);
-          itemPlayer.cards = playersCards.cards;
-          itemPlayer.cardsTop = -playersCards.totalHeight / 4;
-          itemPlayer.cardsLeft = -playersCards.totalWidth;
+
+        const playersCards = calcPlayerCardPosition(player.cards);
+        const itemPlayer = {
+          id: '#',
+          score: 0,
+          money: 0,
+          avatar: AvatarType.Clown,
+          cards: [],
+          cardsTop: 0,
+          cardsLeft: 0,
+        };
+        itemPlayer.id = player.id;
+        itemPlayer.index = player.index;
+        itemPlayer.money = player.money;
+        itemPlayer.avatar = player.avatar;
+        itemPlayer.score = calcScore(player.cards);
+        itemPlayer.cards = playersCards.cards;
+        itemPlayer.cardsTop = -playersCards.totalHeight / 4;
+        itemPlayer.cardsLeft = -playersCards.totalWidth;
+        if (index % 2 === 0) {
+          lPlayers.push(itemPlayer);
+        } else {
           rPlayers.push(itemPlayer);
         }
         index++;
       }
-      return rPlayers;
+      return {
+        lPlayers: lPlayers,
+        rPlayers: rPlayers,
+      };
     },
-    gameInfo (state) {
+    gameInfo(state) {
       return {
         boardCard: state.gameInfo.boardCard,
         creatorId: state.gameInfo.creatorId,
@@ -120,10 +90,10 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
-    setPlayers (state, players) {
+    setPlayers(state, players) {
       state.players = players;
     },
-    setGameInfo (state, gameInfo) {
+    setGameInfo(state, gameInfo) {
       state.gameInfo = gameInfo;
     }
   }

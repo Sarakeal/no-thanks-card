@@ -145,7 +145,7 @@ export default {
       playerAction: playerAction,
     }
   },
-  async created() {
+  async mounted() {
     let roomNumber = this.$route.query['number'];
     const res = await initRoom({roomNumber: roomNumber})
     if (res && res.status === 200) {
@@ -159,7 +159,6 @@ export default {
         });
       } else if (data.status === RoomStatus.Running || data.status === RoomStatus.End) {
         joinRoomSocket(roomNumber);
-        console.log(data);
         store.commit('setPlayers', data.players);
         store.commit('setGameInfo', data.gameInfo);
       } else {
@@ -227,10 +226,16 @@ export default {
     Action() {
       return Action
     },
+    selfPlayer () {
+      return store.getters.getSelfPlayer(this.selfPlayerID);
+    },
+    lPlayers () {
+      return store.getters.getOtherPlayers(this.selfPlayerID).lPlayers;
+    },
+    rPlayers () {
+      return store.getters.getOtherPlayers(this.selfPlayerID).rPlayers;
+    },
     ...mapGetters([
-        'selfPlayer',
-        'lPlayers',
-        'rPlayers',
         'gameInfo',
     ])
   }
