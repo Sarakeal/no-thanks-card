@@ -40,6 +40,6 @@ export enum AvatarType {
 }
 
 export const AnimationConfig = {
-  frameNumber: 60,
+  frameNumber: 30,
   animationTime: 1000, // unit: ms
 }

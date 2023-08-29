@@ -109,10 +109,6 @@
         </div>
       </div>
     </div>
-    <div v-if="actionType === Action.ACCEPT" class="card z-40" :class="'card-' + movedCard"
-         :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
-    <div v-if="actionType === Action.REJECT" class="w-16 h-16 absolute rounded-full bg-red-600 border-4 z-40"
-         :style="{left: animationConfig.left + 'px', top:animationConfig.top + 'px'}"></div>
   </div>
 </template>
 
@@ -134,12 +130,6 @@ export default {
   data() {
     return {
       selfPlayerID: getSelfPlayerId(),
-      actionType: null,
-      animationConfig: {
-        left: 0,
-        top: 0,
-      },
-      movedCard: 0,
       playerAction: playerAction,
     }
   },
@@ -185,33 +175,41 @@ export default {
       let desLeft = 0;
       let desTop = 0;
 
+      const element = document.createElement("div");
+      const root = document.getElementById("root");
+
       if (actionType === Action.ACCEPT) {
-        this.movedCard = movedCard;
         startLeft = bRect.left;
         startTop = bRect.top;
         desLeft = pRect.left;
         desTop = playerId === this.selfPlayerID ? pRect.top - 100 : pRect.top;
+
+        element.classList.add("card", "z-40", "card-" + movedCard);
       } else {
         startLeft = pRect.left;
         startTop = pRect.top;
         desLeft = (bRect.left + bRect.right) / 2 - 32;  // 32是筹码的半径，这样让筹码移动到卡牌的中央
         desTop = (bRect.top + bRect.bottom) / 2 - 32;
+
+        element.classList.add("w-16", "h-16", "absolute", "rounded-full", "bg-red-600", "border-4", "z-40");
       }
+
+      element.style.left = startLeft + 'px';
+      element.style.top = startTop + 'px';
+
+      root.appendChild(element);
 
       let index = 0;
       const totalFrameNumber = AnimationConfig.frameNumber * AnimationConfig.animationTime / 1000;
 
       const timer = setInterval(() => {
-        this.actionType = actionType;
-        this.animationConfig.left = (desLeft - startLeft) / totalFrameNumber * index + startLeft;
-        this.animationConfig.top = (desTop - startTop) / totalFrameNumber * index + startTop;
+        element.style.left = (desLeft - startLeft) / totalFrameNumber * index + startLeft + 'px';
+        element.style.top = (desTop - startTop) / totalFrameNumber * index + startTop + 'px';
         index++;
       }, 1000 / AnimationConfig.frameNumber);
       setTimeout(() => {
         clearInterval(timer);
-        this.actionType = null;
-        this.animationConfig.left = startLeft;
-        this.animationConfig.top = startTop;
+        root.removeChild(element);
       }, AnimationConfig.animationTime);
     },
   },
@@ -243,7 +241,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #root {
   background-color: #f0f8e8;
 }
