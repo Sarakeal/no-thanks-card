@@ -1,4 +1,4 @@
-import {calcHandCardPosition, calcPlayerCardPosition, calcScore} from "@/utils";
+import {activeRangeCard, calcHandCardPosition, calcPlayerCardPosition, calcScore} from "@/utils";
 import {AvatarType} from "../../shared/constants";
 import Vuex from 'vuex'
 import Vue from "vue";
@@ -37,6 +37,9 @@ const store = new Vuex.Store({
         sPlayer.avatar = player.avatar;
         sPlayer.cards = handCards.cards;
         sPlayer.totalWidth = handCards.totalWidth;
+        if (!store.getters.gameInfo.isFinished) {
+          activeRangeCard(sPlayer.cards, store.getters.gameInfo.boardCard);
+        }
       }
       return sPlayer;
     },
@@ -70,6 +73,9 @@ const store = new Vuex.Store({
         itemPlayer.cards = playersCards.cards;
         itemPlayer.cardsTop = -playersCards.totalHeight / 4;
         itemPlayer.cardsLeft = -playersCards.totalWidth;
+        if (!store.getters.gameInfo.isFinished) {
+          activeRangeCard(itemPlayer.cards, store.getters.gameInfo.boardCard);
+        }
         if (index % 2 === 0) {
           lPlayers.push(itemPlayer);
         } else {
