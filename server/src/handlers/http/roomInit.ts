@@ -25,6 +25,7 @@ const roomInit: Middleware = async (ctx, next) => {
         creatorId: room.creatorID,
         currentPlayerId: room.currentPlayer.id,
         isFinished: room.cards.isFinished(),
+        timeout: 10,
       }
     },
   };

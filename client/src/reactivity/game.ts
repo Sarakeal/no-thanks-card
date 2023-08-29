@@ -20,21 +20,6 @@ export const selfPlayer = ref<PlayerDef>({
     avatar: AvatarType.Bear,
 });
 
-export const currentPlayer = ref<PlayerDef>({
-    id: "",
-
-    name: "",
-
-    index: 0,
-
-    cards: [],
-
-    money: 0,
-
-    avatar: AvatarType.Bear,
-
-});
-
-export const gameInfo = ref<ChangeStatusMsg>();
+export const timeout = ref<number>();
 
 export const playerAction = ref<ActionMsg>();

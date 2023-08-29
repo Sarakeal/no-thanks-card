@@ -7,9 +7,8 @@
         </div>
         <div class="flex items-center justify-center text-l mt-4">
           <div class="mx-4">桌上筹码：<span class="text-xl font-bold text-orange-600">{{ gameInfo.money }}</span></div>
-          <div class="mx-4">剩余卡牌：<span class="text-xl font-bold text-orange-600">{{
-              gameInfo.leftCardNumber
-            }}</span></div>
+          <div class="mx-4">剩余卡牌：<span class="text-xl font-bold text-orange-600">{{gameInfo.leftCardNumber }}</span></div>
+          <div class="mx-4">⏰：<span class="text-xl font-bold text-orange-600">{{timeout || 0 }}s</span></div>
         </div>
         <div class="flex-grow flex justify-around mt-10">
           <div class="w-36 flex flex-col">
@@ -131,6 +130,7 @@ export default {
     return {
       selfPlayerID: getSelfPlayerId(),
       playerAction: playerAction,
+      timeout: 0,
     }
   },
   async mounted() {
@@ -153,6 +153,10 @@ export default {
         showDialog("房间不存在！");
       }
     }
+
+    setInterval(() => {
+      if (this.timeout > 0) this.timeout--;
+    }, 1000);
   },
   methods: {
     async accept() {
@@ -216,6 +220,9 @@ export default {
   watch: {
     playerAction: function (newValue) {
       this.animate(newValue.type, newValue.playerId, newValue.movedCard);
+    },
+    gameInfo: function (newValue) {
+      this.timeout = newValue.timeout;
     }
   },
   computed: {
@@ -233,7 +240,7 @@ export default {
     },
     gameInfo () {
       return store.getters.gameInfo;
-    }
+    },
   }
 }
 </script>

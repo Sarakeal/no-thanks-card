@@ -35,4 +35,6 @@ export interface GameInfo {
   creatorId: string,
   currentPlayerId: string,
   isFinished: boolean,
+
+  timeout: number,
 }

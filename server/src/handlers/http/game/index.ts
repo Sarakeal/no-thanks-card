@@ -128,6 +128,7 @@ export const GameHandler: IGameHandler = {
         creatorId: room.creatorID,
         currentPlayerId: room.currentPlayer.id,
         isFinished: room.cards.isFinished(),
+        timeout: timeout,
       }
     } as ChangeStatusMsg);
 
