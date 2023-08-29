@@ -84,7 +84,7 @@
             <div id="boardCard" class="card" :class="'card-' + gameInfo.boardCard"></div>
           </div>
         </div>
-        <div>
+        <div v-if="isPlayer">
           <div class="flex justify-center items-center relative">
             <div v-show="selfPlayerID === gameInfo.currentPlayerId" class="flex justify-center items-center absolute -top-14">
               <button @click="accept"
@@ -232,6 +232,9 @@ export default {
     },
     rPlayers () {
       return store.getters.getOtherPlayers(this.selfPlayerID).rPlayers;
+    },
+    isPlayer () {
+      return store.getters.isPlayer(this.selfPlayerID);
     },
     gameInfo () {
       return store.getters.gameInfo;

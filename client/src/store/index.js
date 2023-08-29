@@ -87,6 +87,11 @@ const store = new Vuex.Store({
         leftCardNumber: state.gameInfo.leftCardNumber,
         isFinished: state.gameInfo.isFinished,
       }
+    },
+    isPlayer: (state) => (playerId) => {
+      if (!playerId) return false;
+      const player = state.players.find(p => p.id === playerId);
+      return !!player;
     }
   },
   mutations: {
