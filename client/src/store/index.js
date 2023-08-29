@@ -14,7 +14,7 @@ const store = new Vuex.Store({
       currentPlayerId: 0,
       money: 0,
       leftCardNumber: 0,
-      isFinished: 0,
+      isFinished: true,
     },
   },
   getters: {
