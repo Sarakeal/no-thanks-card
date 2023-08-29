@@ -86,14 +86,14 @@
         </div>
         <div v-if="isPlayer">
           <div class="flex justify-center items-center relative">
-            <div v-show="selfPlayerID === gameInfo.currentPlayerId" class="flex justify-center items-center absolute -top-14">
+            <div v-show="!gameInfo.isFinished && selfPlayerID === gameInfo.currentPlayerId" class="flex justify-center items-center absolute -top-14">
               <button @click="accept"
-                      class="m-2 bg-green-500 hover:bg-green-600 active:bg-green-700  rounded-full py-2 px-8 text-white font-semibold shadow-md">
+                      class="m-2 bg-green-500 hover:bg-green-600 active:bg-green-700  rounded-full py-2 px-8 text-white font-semibold shadow-md z-50">
                 Take it!
               </button>
               <button @click="reject"
                       v-show="selfPlayer.money > 0"
-                      class="m-2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-full py-2 px-8 text-white font-semibold shadow-md">
+                      class="m-2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-full py-2 px-8 text-white font-semibold shadow-md  z-50">
                 No thanks!
               </button>
             </div>
@@ -219,9 +219,6 @@ export default {
     }
   },
   computed: {
-    Action() {
-      return Action
-    },
     selfPlayer () {
       return store.getters.getSelfPlayer(this.selfPlayerID);
     },

@@ -75,11 +75,8 @@ export const GameHandler: IGameHandler = {
         room.cards.next();
       }
     }
-    if (room.cards.isFinished()) {
-      this.end(room);
-    } else {
-      this.start(room);
-    }
+
+    this.start(room);
 
     return {
       status: 200,
@@ -194,7 +191,7 @@ export class Cards {
 
   next() {
     this.index++;
-    this.left--;
+    if (this.left > 0) this.left--;
     if (this.isFinished()) return;
     this.currentCard = this.cards[this.index];
   }
