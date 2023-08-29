@@ -86,14 +86,13 @@
         </div>
         <div>
           <div class="flex justify-center items-center relative">
-            <div class="flex justify-center items-center absolute -top-14">
+            <div v-show="selfPlayerID === gameInfo.currentPlayerId" class="flex justify-center items-center absolute -top-14">
               <button @click="accept"
-                      v-show="selfPlayerID === gameInfo.currentPlayerId"
                       class="m-2 bg-green-500 hover:bg-green-600 active:bg-green-700  rounded-full py-2 px-8 text-white font-semibold shadow-md">
                 Take it!
               </button>
               <button @click="reject"
-                      v-show="selfPlayerID === gameInfo.currentPlayerId && selfPlayer.money > 0"
+                      v-show="selfPlayer.money > 0"
                       class="m-2 bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-full py-2 px-8 text-white font-semibold shadow-md">
                 No thanks!
               </button>
@@ -127,7 +126,6 @@ import {joinRoomSocket} from "@/socket";
 import {showDialog} from "@/reactivity/dialog";
 import {playerAction} from "@/reactivity/game";
 import {getSelfPlayerId} from "@/utils/token";
-import {mapGetters} from "vuex";
 import store from "@/store";
 
 export default {
@@ -235,9 +233,9 @@ export default {
     rPlayers () {
       return store.getters.getOtherPlayers(this.selfPlayerID).rPlayers;
     },
-    ...mapGetters([
-        'gameInfo',
-    ])
+    gameInfo () {
+      return store.getters.gameInfo;
+    }
   }
 }
 </script>
