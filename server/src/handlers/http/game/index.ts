@@ -193,10 +193,10 @@ export class Cards {
   }
 
   next() {
+    this.index++;
+    this.left--;
     if (this.isFinished()) return;
     this.currentCard = this.cards[this.index];
-    this.left--;
-    this.index++;
   }
 
   isFinished() {
